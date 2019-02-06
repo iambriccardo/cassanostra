@@ -29,7 +29,11 @@ function handleLogin()
         if (!empty($username) && !empty($password)) {
             $_SESSION['username'] = $username;
             header("Location: ../home/home.php");
+        } else {
+            header("Location: login.php");
         }
+    } else {
+        header("Location: login.php");
     }
 }
 
@@ -43,7 +47,11 @@ function handleRegistration()
         if (!empty($username) && !empty($password) && !empty($role)) {
             $_SESSION['username'] = $username;
             header("Location: ../home/home.php");
+        } else {
+            header("Location: registration.php");
         }
+    } else {
+        header("Location: registration.php");
     }
 }
 
@@ -75,9 +83,9 @@ require_once 'loginUtils.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     showLoader();
 
-    if (isset($_POST['loginAction']) && !empty($_POST['loginAction'])) {
+    if (isset($_POST['loginAction'])) {
         handleLogin();
-    } else if (isset($_POST['registrationAction']) && !empty($_POST['registrationAction'])) {
+    } else if (isset($_POST['registrationAction'])) {
         handleRegistration();
     }
 } else {

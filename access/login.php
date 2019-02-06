@@ -39,7 +39,7 @@ checkAccessAndRedirect("../home/home.php", NULL);
                             </div>
                             <div class="input-field col s12">
                                 <input id="username" name="username" type="text" class="validate">
-                                <label for="username">Nome utente</label>
+                                <label for="username">Username</label>
                             </div>
                             <div class="input-field col s12">
                                 <input id="password" name="password" type="password" class="validate">

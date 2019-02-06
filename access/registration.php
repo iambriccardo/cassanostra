@@ -31,30 +31,27 @@ checkAccessAndRedirect("../home/home.php", NULL);
         <div class="col s6 offset-s3">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title">Login</span>
+                    <span class="card-title">Registrati</span>
                     <form action="accessHandler.php" method="POST">
                         <div class="row">
                             <div class="col s12">
-                                <p>Benvenuto in CassaNostra, registrati per accedere al servizio.</p>
+                                <p>Benvenuto in CassaNostra, registrati come cliente per accedere al servizio.</p>
+                            </div>
+                            <div class="input-field col s12">
+                                <input id="username" name="firstName" type="text" class="validate">
+                                <label for="username">Nome</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <input id="username" name="lastName" type="text" class="validate">
+                                <label for="username">Cognome</label>
                             </div>
                             <div class="input-field col s12">
                                 <input id="username" name="username" type="text" class="validate">
-                                <label for="username">Nome utente</label>
+                                <label for="username">Username</label>
                             </div>
                             <div class="input-field col s12">
                                 <input id="password" name="password" type="password" class="validate">
                                 <label for="password">Password</label>
-                            </div>
-                            <div class="input-field col s12">
-                                <select name="role">
-                                    <option value="" disabled selected>Scegli un ruolo</option>
-                                    <option value="MAG">Magazziniere</option>
-                                    <option value="DIR">Direttore</option>
-                                    <option value="CLI">Cliente</option>
-                                    <option value="CAS">Cassiere</option>
-                                    <option value="FOR">Fornitore</option>
-                                </select>
-                                <label>Materialize Select</label>
                             </div>
                         </div>
                         <div class="right-align">
