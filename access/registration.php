@@ -46,6 +46,10 @@ checkAccessAndRedirect("../home/home.php", NULL);
                                 <label for="lastName">Cognome</label>
                             </div>
                             <div class="input-field col s12">
+                                <input id="email" name="email" type="text" class="validate">
+                                <label for="email">Email</label>
+                            </div>
+                            <div class="input-field col s12">
                                 <input id="username" name="username" type="text" class="validate">
                                 <label for="username">Username</label>
                             </div>

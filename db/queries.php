@@ -2,34 +2,55 @@
 
 function connectToDB($host = "localhost", $username = "qvanto", $password = "", $dbName = "my_qvanto")
 {
-    $mysqli = new mysqli($host, $username, $password, $dbName);
+    $connection = new mysqli($host, $username, $password, $dbName);
 
-    if ($mysqli->connect_error) {
-        die('Errore di connessione (' . $mysqli->connect_errno . ') '
-            . $mysqli->connect_error);
-    } else {
-        echo 'Connesso. ' . $mysqli->host_info . "\n";
+    if ($connection->connect_error) {
+        die('Errore di connessione (' . $connection->connect_errno . ') '
+            . $connection->connect_error);
     }
 
-    return $mysqli;
+    return $connection;
 }
 
 function login($username, $password)
 {
     $connection = connectToDB();
 
-    $password = password_hash($password, PASSWORD_BCRYPT);
+    $query = "SELECT *
+    FROM cnUtente
+    WHERE Username = '${username}'";
 
-    $query = "SELECT
-    FROM cnUtenti
-    WHERE Username = '${username}' AND Password = ${password}";
+    $result = $connection->query($query);
+    $isAllowed = false;
 
-    return $connection->query($query);
+    if ($result->num_rows > 0) {
+        $rows = $result->fetch_assoc();
+
+        /* while ($row = $result->fetch_assoc() && !$isAllowed) {
+            if (password_verify($password, $row['Password'])) {
+                $isAllowed = true;
+            }
+        } */
+    }
+
+    $connection->close();
+
+    return $isAllowed;
 }
 
-function register($firstName, $lastName, $username, $password, $role)
+function register($firstName, $lastName, $email, $username, $password, $role)
 {
     $connection = connectToDB();
-}
 
-?>
+    $password = password_hash($password, PASSWORD_BCRYPT);
+
+    $query = "INSERT INTO cnUtente
+    (Username, Password, Email, Nome, Cognome, Ruolo)
+    VALUES ('${username}', '${password}', '${email}', '${firstName}', '${lastName}', '${role}')";
+
+    $result = $connection->query($query);
+
+    $connection->close();
+
+    return $result;
+}

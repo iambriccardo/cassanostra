@@ -1,4 +1,6 @@
 <?php
+require_once '../db/queries.php';
+
 session_start();
 
 function showLoader()
@@ -27,8 +29,12 @@ function handleLogin()
         $password = $_POST['password'];
 
         if (!empty($username) && !empty($password)) {
-            $_SESSION['username'] = $username;
-            header("Location: ../home/home.php");
+            if (login($username, $password)) {
+                $_SESSION['username'] = $username;
+                header("Location: ../home/home.php");
+            } else {
+                echo "Error while logging in, you are not allowed";
+            }
         } else {
             header("Location: login.php");
         }
@@ -39,14 +45,15 @@ function handleLogin()
 
 function handleRegistration()
 {
-    if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['role'])) {
+    if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['role'])) {
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
+        $email = $_POST['email'];
         $username = $_POST['username'];
         $password = $_POST['password'];
         $role = $_POST['role'];
 
-        if (!empty($firstName) && !empty($lastName) && !empty($username) && !empty($password) && !empty($role)) {
+        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password) && !empty($role)) {
             $_SESSION['username'] = $username;
             header("Location: ../home/home.php");
         } else {
