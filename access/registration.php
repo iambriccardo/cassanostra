@@ -38,12 +38,12 @@ checkAccessAndRedirect("../home/home.php", NULL);
                                 <p>Benvenuto in CassaNostra, registrati come cliente per accedere al servizio.</p>
                             </div>
                             <div class="input-field col s12">
-                                <input id="username" name="firstName" type="text" class="validate">
-                                <label for="username">Nome</label>
+                                <input id="firstName" name="firstName" type="text" class="validate">
+                                <label for="firstName">Nome</label>
                             </div>
                             <div class="input-field col s12">
-                                <input id="username" name="lastName" type="text" class="validate">
-                                <label for="username">Cognome</label>
+                                <input id="lastName" name="lastName" type="text" class="validate">
+                                <label for="lastName">Cognome</label>
                             </div>
                             <div class="input-field col s12">
                                 <input id="username" name="username" type="text" class="validate">
@@ -52,6 +52,7 @@ checkAccessAndRedirect("../home/home.php", NULL);
                             <div class="input-field col s12">
                                 <input id="password" name="password" type="password" class="validate">
                                 <label for="password">Password</label>
+                                <p>Hai già un account? <a href="login.php">Accedi.</a></p>
                             </div>
                         </div>
                         <div class="right-align">

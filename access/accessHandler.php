@@ -39,12 +39,14 @@ function handleLogin()
 
 function handleRegistration()
 {
-    if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['role'])) {
+    if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['role'])) {
+        $firstName = $_POST['firstName'];
+        $lastName = $_POST['lastName'];
         $username = $_POST['username'];
         $password = $_POST['password'];
         $role = $_POST['role'];
 
-        if (!empty($username) && !empty($password) && !empty($role)) {
+        if (!empty($firstName) && !empty($lastName) && !empty($username) && !empty($password) && !empty($role)) {
             $_SESSION['username'] = $username;
             header("Location: ../home/home.php");
         } else {

@@ -1,20 +1,20 @@
 <?php
 
-function checkAccessAndRedirect($locationSuccessful, $locationUnsuccessful)
+function checkAccessAndRedirect($locationAccessSuccessful, $locationAccessUnsuccessful)
 {
     if (isset($_SESSION['username'])) {
         if (!empty($_SESSION['username'])) {
-            if ($locationSuccessful != NULL) {
-                header("Location: {$locationSuccessful}");
+            if ($locationAccessSuccessful != NULL) {
+                header("Location: {$locationAccessSuccessful}");
             }
         } else {
-            if ($locationUnsuccessful != NULL) {
-                header("Location: {$locationUnsuccessful}");
+            if ($locationAccessUnsuccessful != NULL) {
+                header("Location: {$locationAccessUnsuccessful}");
             }
         }
     } else {
-        if ($locationUnsuccessful != NULL) {
-            header("Location: {$locationUnsuccessful}");
+        if ($locationAccessUnsuccessful != NULL) {
+            header("Location: {$locationAccessUnsuccessful}");
         }
     }
 }
