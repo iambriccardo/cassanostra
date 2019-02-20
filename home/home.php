@@ -1,9 +1,9 @@
 <?php
-require '../access/loginUtils.php';
+require_once '../access/loginUtils.php';
 
 session_start();
 
-checkAccessAndRedirect(NULL, "../access/login.php");
+//checkAccessAndRedirect(NULL, "../access/login.php");
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +25,52 @@ checkAccessAndRedirect(NULL, "../access/login.php");
     <link type="text/css" rel="stylesheet" href="styles.css"/>
 </head>
 
-<body class="valign-wrapper">
+<body>
+    
+    
+    
+    <div class="row">
+    <nav class="nav-extended">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">CassaNostra</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">JavaScript</a></li>
+      </ul>
+    </div>
+    <div class="nav-content">
+      <ul class="tabs tabs-transparent">
+        <li class="tab"><a href="#test1">Magazziniere</a></li>
+        <li class="tab"><a class="active" href="#test2">Cliente</a></li>
+        <li class="tab disabled"><a href="#test3">Direttore</a></li>
+        <li class="tab"><a href="#test4">Test 4</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="sass.html">Sass</a></li>
+    <li><a href="badges.html">Components</a></li>
+    <li><a href="collapsible.html">JavaScript</a></li>
+  </ul>
+
+  
+    <div class="col s12 m6">
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Card Title</span>
+          <p>I am a very simple card. I am good at containing small bits of information.
+          I am convenient because I require little markup to use effectively.</p>
+        </div>
+        <div class="card-action">
+          <a href="#">This is a link</a>
+          <a href="#">This is a link</a>
+        </div>
+      </div>
+    </div>
+    </div>
 <?php
 
     if (isset($_SESSION['username'])) {
