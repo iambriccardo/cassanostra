@@ -24,13 +24,12 @@ function login($username, $password)
     $isAllowed = false;
 
     if ($result->num_rows > 0) {
-        $rows = $result->fetch_assoc();
-
-        /* while ($row = $result->fetch_assoc() && !$isAllowed) {
+        while ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row['Password'])) {
                 $isAllowed = true;
+                break;
             }
-        } */
+        }
     }
 
     $connection->close();
@@ -48,9 +47,10 @@ function register($firstName, $lastName, $email, $username, $password, $role)
     (Username, Password, Email, Nome, Cognome, Ruolo)
     VALUES ('${username}', '${password}', '${email}', '${firstName}', '${lastName}', '${role}')";
 
-    $result = $connection->query($query);
+    $connection->query($query);
+    $isAllowed = empty(mysqli_error($connection));
 
     $connection->close();
 
-    return $result;
+    return $isAllowed;
 }

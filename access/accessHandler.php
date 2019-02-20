@@ -33,7 +33,7 @@ function handleLogin()
                 $_SESSION['username'] = $username;
                 header("Location: ../home/home.php");
             } else {
-                echo "Error while logging in, you are not allowed";
+                header("Location: login.php");
             }
         } else {
             header("Location: login.php");
@@ -43,19 +43,23 @@ function handleLogin()
     }
 }
 
-function handleRegistration()
+function handleClientRegistration()
 {
-    if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['role'])) {
+    if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password'])) {
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
         $email = $_POST['email'];
         $username = $_POST['username'];
         $password = $_POST['password'];
-        $role = $_POST['role'];
+        $clientRole = "CLI";
 
-        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password) && !empty($role)) {
-            $_SESSION['username'] = $username;
-            header("Location: ../home/home.php");
+        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password)) {
+            if (register($firstName, $lastName, $email, $username, $password, $clientRole)) {
+                $_SESSION['username'] = $username;
+                header("Location: ../home/home.php");
+            } else {
+                header("Location: registration.php");
+            }
         } else {
             header("Location: registration.php");
         }
@@ -95,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['loginAction'])) {
         handleLogin();
     } else if (isset($_POST['registrationAction'])) {
-        handleRegistration();
+        handleClientRegistration();
     }
 } else {
     checkAccessAndRedirect("../home/home.php", "login.php");
