@@ -30,8 +30,7 @@ function handleLogin()
 
         if (!empty($username) && !empty($password)) {
             if (login($username, $password)) {
-                $_SESSION['username'] = $username;
-                header("Location: ../home/home.php");
+                header("Location: ../home/index.php");
             } else {
                 header("Location: login.php");
             }

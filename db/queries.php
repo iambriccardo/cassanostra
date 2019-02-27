@@ -27,6 +27,8 @@ function login($username, $password)
         while ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row['Password'])) {
                 $isAllowed = true;
+                $_SESSION['username'] = $row['Username'];
+                $_SESSION['role'] = $row['Ruolo'];
                 break;
             }
         }
@@ -48,7 +50,11 @@ function register($firstName, $lastName, $email, $username, $password, $role)
     VALUES ('${username}', '${password}', '${email}', '${firstName}', '${lastName}', '${role}')";
 
     $connection->query($query);
-    $isAllowed = empty(mysqli_error($connection));
+
+    $isAllowed = false;
+    if (empty($connection->error)) {
+        $isAllowed = login($username, $password);
+    }
 
     $connection->close();
 
