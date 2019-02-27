@@ -55,7 +55,7 @@ function handleClientRegistration()
         if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password)) {
             if (register($firstName, $lastName, $email, $username, $password, $clientRole)) {
                 $_SESSION['username'] = $username;
-                header("Location: ../home/home.php");
+                header("Location: ../home/index.php");
             } else {
                 header("Location: registration.php");
             }
@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         handleClientRegistration();
     }
 } else {
-    checkAccessAndRedirect("../home/home.php", "login.php");
+    checkAccessAndRedirect("../home/index.php", "login.php");
     exit();
 }
 

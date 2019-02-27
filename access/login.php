@@ -3,7 +3,7 @@ require 'loginUtils.php';
 
 session_start();
 
-checkAccessAndRedirect("../home/home.php", NULL);
+checkAccessAndRedirect("../home/index.php", NULL);
 ?>
 
 <!DOCTYPE html>
