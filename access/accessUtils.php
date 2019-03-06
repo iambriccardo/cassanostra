@@ -41,8 +41,8 @@ function checkAccessAndRedirectIfNeeded()
         }
     }
     else {
-        if ($_SERVER["REQUEST_URI"] !== BASE_URL . "/login.php") {
-            header("Location: " . BASE_URL . "/login.php");
+        if ($_SERVER["REQUEST_URI"] !== BASE_URL . "login.php") {
+            header("Location: " . BASE_URL . "login.php");
             exit();
         }
     }
