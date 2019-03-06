@@ -1,7 +1,7 @@
 <?php
+require_once 'pageUtils.php';
+require_once '../access/supportsLogout.php';
 require_once '../access/accessUtils.php';
-
-session_start();
 
 //checkAccessAndRedirectIfNeeded();
 ?>
@@ -10,35 +10,21 @@ session_start();
 <html>
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <title>Home - CassaNostra</title>
+    <title>Magazzino - CassaNostra</title>
 
-    <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection" />
-    <link type="text/css" rel="stylesheet" href="styles.css" />
+    <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="styles.css"/>
 </head>
 
 <body>
-
-
+    <? printNavbar() ?>
 
     <div class="row">
-        <nav class="nav-extended  blue-grey darken-4">
-            <div class="nav-wrapper">
-                <a class="brand-logo center">CassaNostra</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a>Esci</a></li>
-                </ul>
-            </div>
-        </nav>
-
-
         <div class="col s12 m12 l6 center offset-l3">
             <div class="card grey lighten-5">
                 <div class="card-content black-text">
@@ -118,30 +104,15 @@ session_start();
 
     <script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('select');
-            var instances = M.FormSelect.init(elems, options);
-        });
-
-        // Or with jQuery
-
         $(document).ready(function() {
             $('select').formSelect();
         });
 
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.fixed-action-btn');
-            var instances = M.FloatingActionButton.init(elems, options);
-        });
-
-        // Or with jQuery
-
         $(document).ready(function() {
             $('.fixed-action-btn').floatingActionButton();
         });
-
     </script>
 
 </body>
