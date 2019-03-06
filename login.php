@@ -38,7 +38,7 @@ checkAccessAndRedirectIfNeeded();
                             <div class="input-field col s12">
                                 <input id="password" name="password" type="password" class="validate">
                                 <label for="password">Password</label>
-                                <p>Non hai un account? <a href="access/registration.php">Registrati.</a></p>
+                                <p>Non hai un account? <a href="register.php">Registrati.</a></p>
                             </div>
                         </div>
                         <div class="right-align">

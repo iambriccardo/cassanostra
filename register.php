@@ -1,7 +1,7 @@
 <?php
-require 'accessUtils.php';
+require 'access/accessUtils.php';
 
-checkAccessAndRedirectIfNeeded();
+checkAccessAndRedirectIfNeeded("register.php");
 ?>
 
 <!DOCTYPE html>
@@ -15,8 +15,8 @@ checkAccessAndRedirectIfNeeded();
     <title>Registrati - CassaNostra</title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="../styles.css"/>
+    <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="styles.css"/>
 </head>
 
 <body class="valign-wrapper">
@@ -26,7 +26,7 @@ checkAccessAndRedirectIfNeeded();
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Registrati</span>
-                    <form action="accessHandler.php" method="POST">
+                    <form action="access/accessHandler.php" method="POST">
                         <div class="row">
                             <div class="col s12">
                                 <p>Benvenuto in CassaNostra, registrati come cliente per accedere al servizio.</p>
@@ -50,7 +50,7 @@ checkAccessAndRedirectIfNeeded();
                             <div class="input-field col s12">
                                 <input id="password" name="password" type="password" class="validate">
                                 <label for="password">Password</label>
-                                <p>Hai già un account? <a href="../login.php">Accedi.</a></p>
+                                <p>Hai già un account? <a href="login.php">Accedi.</a></p>
                             </div>
                         </div>
                         <div class="right-align">
@@ -66,8 +66,8 @@ checkAccessAndRedirectIfNeeded();
     </div>
 </div>
 <!--JavaScript at end of body for optimized loading-->
-<script type="text/javascript" src="../lib/jquery/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="lib/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="lib/materialize/js/materialize.min.js"></script>
 <script>
     $(document).ready(function () {
         $('select').formSelect();

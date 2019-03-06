@@ -24,27 +24,22 @@ function showLoader()
 
 function handleLogin()
 {
-    if (isset($_POST['username']) && isset($_POST['password'])) {
+    if (isset($_POST['username']) && isset($_POST['password']))
+    {
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        if (!empty($username) && !empty($password)) {
-            if (login($username, $password)) {
-                header("Location: ../home/index.php");
-            } else {
-                header("Location: login.php");
-            }
-        } else {
-            header("Location: login.php");
-        }
-    } else {
-        header("Location: login.php");
+        if (!empty($username) && !empty($password))
+            attemptLogin($username, $password);
+
+        checkAccessAndRedirectIfNeeded();
     }
 }
 
 function handleClientRegistration()
 {
-    if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password'])) {
+    if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password']))
+    {
         $firstName = $_POST['firstName'];
         $lastName = $_POST['lastName'];
         $email = $_POST['email'];
@@ -52,18 +47,10 @@ function handleClientRegistration()
         $password = $_POST['password'];
         $clientRole = "CLI";
 
-        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password)) {
-            if (register($firstName, $lastName, $email, $username, $password, $clientRole)) {
-                $_SESSION['username'] = $username;
-                header("Location: ../home/index.php");
-            } else {
-                // header("Location: registration.php");
-            }
-        } else {
-            header("Location: registration.php");
-        }
-    } else {
-        header("Location: registration.php");
+        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password))
+            attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $clientRole);
+
+        checkAccessAndRedirectIfNeeded("register.php");
     }
 }
 
@@ -97,7 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     checkAccessAndRedirectIfNeeded();
-    exit();
 }
 
 ?>

@@ -12,7 +12,7 @@ function connectToDB($host = "localhost", $username = "qvanto", $password = "", 
     return $connection;
 }
 
-function login($username, $password)
+function attemptLogin($username, $password)
 {
     $connection = connectToDB();
     $isAllowed = false;
@@ -42,7 +42,7 @@ function login($username, $password)
     return $isAllowed;
 }
 
-function register($firstName, $lastName, $email, $username, $password, $role)
+function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role)
 {
     $connection = connectToDB();
     $isAllowed = false;
@@ -53,7 +53,7 @@ function register($firstName, $lastName, $email, $username, $password, $role)
         $query->bind_param("ssssss", $username, $hashed_pwd, $email, $firstName, $lastName, $role);
         $query->execute();
 
-        $isAllowed = login($username, $password);
+        $isAllowed = attemptLogin($username, $password);
 
         $query->close();
     }
