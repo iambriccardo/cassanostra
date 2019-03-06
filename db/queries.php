@@ -62,3 +62,19 @@ function register($firstName, $lastName, $email, $username, $password, $role)
 
     return $isAllowed;
 }
+
+function getUsersList()
+{
+    $connection = connectToDB();
+    $result = $connection->query("SELECT Username, Email, Nome, Cognome, Ruolo FROM cnUtente");
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all();
+}
+
+function generateTableHtmlFromQueryResult($headerNames, $resultRows)
+{
+    // TODO
+}
