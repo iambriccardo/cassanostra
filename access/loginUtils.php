@@ -47,3 +47,12 @@ function checkAccessAndRedirectIfNeeded()
         }
     }
 }
+
+/**
+ * Effettua il logout dell'utente
+ */
+function performLogout() {
+    session_start();
+    session_destroy();
+    checkAccessAndRedirectIfNeeded();
+}
