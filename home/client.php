@@ -1,5 +1,5 @@
 <?php
-require_once '../access/loginUtils.php';
+require_once '../access/accessUtils.php';
 
 session_start();
 
@@ -20,7 +20,7 @@ session_start();
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="../frameworks/materialize/css/materialize.min.css"
+    <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css"
           media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="styles.css"/>
 </head>
@@ -74,6 +74,6 @@ if (isset($_SESSION['username'])) {
 
 ?>
 <!--JavaScript at end of body for optimized loading-->
-<script type="text/javascript" src="../frameworks/materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
 </body>
 </html>

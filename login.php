@@ -1,5 +1,5 @@
 <?php
-require 'loginUtils.php';
+require 'access/accessUtils.php';
 
 checkAccessAndRedirectIfNeeded();
 ?>
@@ -18,9 +18,9 @@ checkAccessAndRedirectIfNeeded();
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="../frameworks/materialize/css/materialize.min.css"
+    <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.min.css"
           media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="styles.css"/>
+    <link type="text/css" rel="stylesheet" href="access/styles.css"/>
 </head>
 
 <body class="valign-wrapper">
@@ -30,7 +30,7 @@ checkAccessAndRedirectIfNeeded();
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Login</span>
-                    <form action="accessHandler.php" method="POST">
+                    <form action="access/accessHandler.php" method="POST">
                         <div class="row">
                             <div class="col s12">
                                 <p>Benvenuto in CassaNostra, per iniziare accedi con le tue credenziali.</p>
@@ -42,7 +42,7 @@ checkAccessAndRedirectIfNeeded();
                             <div class="input-field col s12">
                                 <input id="password" name="password" type="password" class="validate">
                                 <label for="password">Password</label>
-                                <p>Non hai un account? <a href="registration.php">Registrati.</a></p>
+                                <p>Non hai un account? <a href="access/registration.php">Registrati.</a></p>
                             </div>
                         </div>
                         <div class="right-align">
@@ -58,7 +58,7 @@ checkAccessAndRedirectIfNeeded();
     </div>
 </div>
 <!--JavaScript at end of body for optimized loading-->
-<script type="text/javascript" src="../frameworks/materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="lib/materialize/js/materialize.min.js"></script>
 </body>
 
 </html>

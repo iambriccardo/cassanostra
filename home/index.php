@@ -1,4 +1,4 @@
 <?php
-require_once '../access/loginUtils.php';
+require_once '../access/accessUtils.php';
 
 checkAccessAndRedirectIfNeeded();

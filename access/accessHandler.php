@@ -83,14 +83,14 @@ function handleClientRegistration()
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="../frameworks/materialize/css/materialize.min.css"
+    <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css"
           media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="styles.css"/>
 </head>
 
 <body class="valign-wrapper">
 <?php
-require_once 'loginUtils.php';
+require_once 'accessUtils.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     showLoader();
@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 ?>
 <!--JavaScript at end of body for optimized loading-->
-<script type="text/javascript" src="../frameworks/materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 <?php
-require 'loginUtils.php';
+require 'accessUtils.php';
 
 checkAccessAndRedirectIfNeeded();
 ?>
@@ -18,7 +18,7 @@ checkAccessAndRedirectIfNeeded();
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="../frameworks/materialize/css/materialize.min.css"
+    <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css"
           media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="styles.css"/>
 </head>
@@ -54,7 +54,7 @@ checkAccessAndRedirectIfNeeded();
                             <div class="input-field col s12">
                                 <input id="password" name="password" type="password" class="validate">
                                 <label for="password">Password</label>
-                                <p>Hai già un account? <a href="login.php">Accedi.</a></p>
+                                <p>Hai già un account? <a href="../login.php">Accedi.</a></p>
                             </div>
                         </div>
                         <div class="right-align">
@@ -70,8 +70,8 @@ checkAccessAndRedirectIfNeeded();
     </div>
 </div>
 <!--JavaScript at end of body for optimized loading-->
-<script type="text/javascript" src="../frameworks/jquery/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="../frameworks/materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="../lib/jquery/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
 <script>
     $(document).ready(function () {
         $('select').formSelect();
