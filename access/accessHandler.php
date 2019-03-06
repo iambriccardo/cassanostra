@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         handleClientRegistration();
     }
 } else {
-    checkAccessAndRedirect("../home/index.php", "login.php");
+    checkAccessAndRedirectIfNeeded();
     exit();
 }
 

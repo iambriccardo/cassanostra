@@ -1,9 +1,7 @@
 <?php
 require 'loginUtils.php';
 
-session_start();
-
-checkAccessAndRedirect("../home/index.php", NULL);
+checkAccessAndRedirectIfNeeded();
 ?>
 
 <!DOCTYPE html>
