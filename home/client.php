@@ -26,60 +26,51 @@ session_start();
 </head>
 
 <body>
-    
-    
-    
-    <div class="row">
-    <nav class="nav-extended">
+<nav class="nav-extended blue-grey darken-4">
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo center">CassaNostra</a>
-      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="sass.html">Sass</a></li>
-        <li><a href="badges.html">Components</a></li>
-        <li><a href="collapsible.html">JavaScript</a></li>
-      </ul>
+        <a class="brand-logo center" href="#">Cassanostra</a>
     </div>
-    <div class="nav-content">
-      <ul class="tabs tabs-transparent">
-        <li class="tab"><a href="#test1">Magazziniere</a></li>
-        <li class="tab"><a class="active" href="#test2">Cliente</a></li>
-        <li class="tab disabled"><a href="#test3">Direttore</a></li>
-        <li class="tab"><a href="#test4">Test 4</a></li>
-      </ul>
-    </div>
-  </nav>
+</nav>
 
-  <ul class="sidenav" id="mobile-demo">
-    <li><a href="sass.html">Sass</a></li>
-    <li><a href="badges.html">Components</a></li>
-    <li><a href="collapsible.html">JavaScript</a></li>
-  </ul>
+<div class="row">
+    <div class="col s12 m3">
+        <div class="card">
+            <div class="card-content">
+                <div class="row">
+                    <div class="col s12 m6 offset-m3">
+                        <img src="../res/fidelity_card.png">
+                    </div>
+                    <div class="col s12 m12">
+                        <span class="card-title">Fidelity card</span>
+                    </div>
 
-  
-    <div class="col s12 m6">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title">Card Title</span>
-          <p>I am a very simple card. I am good at containing small bits of information.
-          I am convenient because I require little markup to use effectively.</p>
+                    <div class="col s12 m12">
+                        <p>Card no. 23546567</p>
+                        <p>Saldo 30$</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-action">
-          <a href="#">This is a link</a>
-          <a href="#">This is a link</a>
+    </div>
+    <div class="col s12 m9">
+        <div class="card">
+            <div class="card-content">
+                <div class="row">
+
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    </div>
+</div>
 <?php
 
-    if (isset($_SESSION['username'])) {
-        if (!empty($_SESSION['username'])) {
-            $username = $_SESSION['username'];
+if (isset($_SESSION['username'])) {
+    if (!empty($_SESSION['username'])) {
+        $username = $_SESSION['username'];
 
-            echo "You are logged in as ${username}";
-        }
+        echo "You are logged in as ${username}";
     }
+}
 
 ?>
 <!--JavaScript at end of body for optimized loading-->
