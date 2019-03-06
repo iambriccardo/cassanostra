@@ -12,7 +12,7 @@ checkAccessAndRedirectIfNeeded("register.php");
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <title>Registrati - CassaNostra</title>
+    <title>Registrati - <?= getMarketName() ?></title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.min.css" media="screen,projection"/>
