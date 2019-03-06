@@ -15,23 +15,26 @@ function connectToDB($host = "localhost", $username = "qvanto", $password = "", 
 function login($username, $password)
 {
     $connection = connectToDB();
-
-    $query = "SELECT *
-    FROM cnUtente
-    WHERE Username = '${username}'";
-
-    $result = $connection->query($query);
     $isAllowed = false;
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            if (password_verify($password, $row['Password'])) {
-                $isAllowed = true;
-                $_SESSION['username'] = $row['Username'];
-                $_SESSION['role'] = $row['Ruolo'];
-                break;
+    if ($query = $connection->prepare("SELECT * FROM cnUtente WHERE Username = ?")) {
+        $query->bind_param("s", $username);
+        $query->execute();
+
+        $result = $query->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if (password_verify($password, $row['Password'])) {
+                    $isAllowed = true;
+                    $_SESSION['username'] = $row['Username'];
+                    $_SESSION['role'] = $row['Ruolo'];
+                    break;
+                }
             }
         }
+
+        $query->close();
     }
 
     $connection->close();
@@ -42,18 +45,17 @@ function login($username, $password)
 function register($firstName, $lastName, $email, $username, $password, $role)
 {
     $connection = connectToDB();
-
-    $password = password_hash($password, PASSWORD_BCRYPT);
-
-    $query = "INSERT INTO cnUtente
-    (Username, Password, Email, Nome, Cognome, Ruolo)
-    VALUES ('${username}', '${password}', '${email}', '${firstName}', '${lastName}', '${role}')";
-
-    $connection->query($query);
-
     $isAllowed = false;
-    if (empty($connection->error)) {
+
+    $hashed_pwd = password_hash($password, PASSWORD_BCRYPT);
+
+    if ($query = $connection->prepare("INSERT INTO cnUtente (Username, Password, Email, Nome, Cognome, Ruolo) VALUES (?, ?, ?, ?, ?, ?)")) {
+        $query->bind_param("ssssss", $username, $hashed_pwd, $email, $firstName, $lastName, $role);
+        $query->execute();
+
         $isAllowed = login($username, $password);
+
+        $query->close();
     }
 
     $connection->close();

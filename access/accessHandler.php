@@ -57,7 +57,7 @@ function handleClientRegistration()
                 $_SESSION['username'] = $username;
                 header("Location: ../home/index.php");
             } else {
-                header("Location: registration.php");
+                // header("Location: registration.php");
             }
         } else {
             header("Location: registration.php");
