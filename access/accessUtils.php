@@ -11,37 +11,16 @@ function checkAccessAndRedirectIfNeeded($fallbackPage = "login.php")
 {
     session_start();
 
-    if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
-        $redirectUrl = BASE_URL . "home/";
-        switch ($_SESSION["role"])
-        {
-            case "MAG":
-                $redirectUrl .= "warehouse.php";
-                break;
-            case "ADM":
-                $redirectUrl .= "admin.php";
-                break;
-            case "DIR":
-                $redirectUrl .= "manager.php";
-                break;
-            case "CLI":
-                $redirectUrl .= "client.php";
-                break;
-            case "CAS":
-                $redirectUrl .= "cashier.php";
-                break;
-            case "FOR":
-                $redirectUrl .= "supplier.php";
-                break;
-        }
-
+    if (isset($_SESSION['username']) && !empty($_SESSION['username']))
+    {
         // Evita il redirect quando si è già sulla pagina giusta
-        if ($_SERVER["REQUEST_URI"] !== $redirectUrl) {
-            header("Location: " . $redirectUrl);
+        if ($_SERVER["REQUEST_URI"] !== BASE_URL . "home/index.php") {
+            header("Location: " . BASE_URL . "home/index.php");
             exit();
         }
     }
-    else {
+    else
+    {
         if ($_SERVER["REQUEST_URI"] !== BASE_URL . $fallbackPage) {
             header("Location: " . BASE_URL . $fallbackPage);
             exit();
