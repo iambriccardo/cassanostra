@@ -1,5 +1,6 @@
 <?php
 require 'access/accessUtils.php';
+require_once 'home/pageUtils.php';
 
 checkAccessAndRedirectIfNeeded();
 ?>

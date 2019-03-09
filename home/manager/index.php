@@ -1,5 +1,5 @@
-<? if (session_status() == PHP_SESSION_ACTIVE): ?>
+<? if (session_status() == PHP_SESSION_ACTIVE && $_SESSION["role"] === "DIR"): ?>
 
-    <p>Pagina del direttore</p>
+<p>Pagina del direttore</p>
 
 <? endif; ?>

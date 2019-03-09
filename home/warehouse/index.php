@@ -1,4 +1,4 @@
-<? if (session_status() == PHP_SESSION_ACTIVE): ?>
+<? if (session_status() == PHP_SESSION_ACTIVE && $_SESSION["role"] === "MAG"): ?>
 
     <div class="row">
         <div class="col s12 m12 l6 center offset-l3">

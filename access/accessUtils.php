@@ -11,7 +11,7 @@ function checkAccessAndRedirectIfNeeded($fallbackPage = "login.php")
 {
     session_start();
 
-    if (isset($_SESSION['username']) && !empty($_SESSION['username']))
+    if (!empty($_SESSION['username']))
     {
         // Evita il redirect quando si è già sulla pagina giusta
         if ($_SERVER["REQUEST_URI"] !== BASE_URL . "home/index.php") {
@@ -32,7 +32,8 @@ function checkAccessAndRedirectIfNeeded($fallbackPage = "login.php")
  * Effettua il logout dell'utente
  */
 function performLogout() {
-    session_start();
-    session_destroy();
+    if (session_status() === PHP_SESSION_ACTIVE)
+        session_destroy();
+
     checkAccessAndRedirectIfNeeded();
 }

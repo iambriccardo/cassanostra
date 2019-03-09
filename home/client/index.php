@@ -1,4 +1,4 @@
-<? if (session_status() == PHP_SESSION_ACTIVE): ?>
+<? if (session_status() == PHP_SESSION_ACTIVE && $_SESSION["role"] === "CLI"): ?>
 
     <div class="row">
         <div class="col s12 m3">
@@ -6,7 +6,8 @@
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12 m6 offset-m3">
-                            <img src="../../res/fidelity_card.png">
+                            <!-- Il percorso relativo si basa sull'index.php all'interno di client -->
+                            <img src="../res/fidelity_card.png">
                         </div>
                         <div class="col s12 m12">
                             <span class="card-title">Fidelity card</span>

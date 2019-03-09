@@ -1,8 +1,6 @@
 <?php
 require_once '../db/queries.php';
 
-session_start();
-
 function showLoader()
 {
     echo "<div class='full-width center-align'>
