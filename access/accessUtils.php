@@ -9,6 +9,14 @@ const BASE_URL = "/cassanostra/";
  */
 function checkAccessAndRedirectIfNeeded($fallbackPage = "login.php")
 {
+    // Se l'utente si sta connettendo con HTTP, reindirizzalo sulla versione HTTPS della pagina corrente
+    if (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+        isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))
+    {
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        exit();
+    }
+
     session_start();
 
     if (!empty($_SESSION['username']))
