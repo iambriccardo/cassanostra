@@ -27,8 +27,11 @@ function attemptLogin($username, $password)
             while ($row = $result->fetch_assoc()) {
                 if (password_verify($password, $row['Password'])) {
                     $isAllowed = true;
+
                     session_start();
                     $_SESSION['username'] = $row['Username'];
+                    $_SESSION['firstName'] = $row['Nome'];
+                    $_SESSION['lastName'] = $row['Cognome'];
                     $_SESSION['role'] = $row['Ruolo'];
                     break;
                 }

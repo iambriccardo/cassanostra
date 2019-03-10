@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
-dieIfInvalidSessionOrRole("FOR");
+dieIfInvalidSessionOrRole("DIR");
 ?>
 
-<p>Pagina del fornitore</p>
+<p>Pagina dei cassieri</p>

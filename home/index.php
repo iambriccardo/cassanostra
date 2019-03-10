@@ -5,7 +5,7 @@ require_once 'pageUtils.php';
 checkAccessAndRedirectIfNeeded();
 ?>
 
-<html>
+<html lang="it">
 
 <head>
     <meta charset="utf-8"/>
@@ -14,6 +14,8 @@ checkAccessAndRedirectIfNeeded();
 
     <title><?= getRoleName($_SESSION["role"]) . ' - ' . getMarketName() ?></title>
 
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="styles.css"/>
@@ -21,32 +23,20 @@ checkAccessAndRedirectIfNeeded();
 
 <body>
     <?php
-    printNavbar($_SESSION["role"]);
-    switch ($_SESSION["role"])
-    {
-        case "MAG":
-            $redirectUrl .= "warehouse";
-            break;
-        case "ADM":
-            $redirectUrl .= "admin";
-            break;
-        case "DIR":
-            $redirectUrl .= "manager";
-            break;
-        case "CLI":
-            $redirectUrl .= "client";
-            break;
-        case "CAS":
-            $redirectUrl .= "cashier";
-            break;
-        case "FOR":
-            $redirectUrl .= "supplier";
-            break;
-    }
-    require "{$redirectUrl}/index.php";
+    // la tab corrente potrebbe essere messa in POST se più conveniente
+    printNavbar($_SESSION["role"], $_SESSION["firstName"], $_SESSION["lastName"], $_GET["tab"]);
+    printPageContent($_SESSION["role"]);
     ?>
 
 <script type="text/javascript" src="../lib/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
+<script>
+    // Inizializza le tab di Materialize se presenti
+    $(document).ready(function() {
+        tabs = $(".tabs");
+        if (tabs != null)
+            tabs.tabs();
+    });
+</script>
 </body>
 </html>

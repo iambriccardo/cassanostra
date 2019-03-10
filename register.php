@@ -6,7 +6,7 @@ checkAccessAndRedirectIfNeeded("register.php");
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <meta charset="utf-8"/>
@@ -15,6 +15,7 @@ checkAccessAndRedirectIfNeeded("register.php");
 
     <title>Registrati - <?= getMarketName() ?></title>
 
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="styles.css"/>

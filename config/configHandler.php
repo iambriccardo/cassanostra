@@ -21,6 +21,9 @@ function parseConfigFileOrLoadDefaults()
     }
 }
 
+/**
+ * Salva su file (mantenendo la sintassi INI) del contenuto attuale dell'array $config
+ */
 function writeConfigOnFile()
 {
     global $config;

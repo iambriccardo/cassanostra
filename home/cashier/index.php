@@ -1,5 +1,6 @@
-<? if (session_status() == PHP_SESSION_ACTIVE && $_SESSION["role"] === "CAS"): ?>
+<?php
+require_once __DIR__ . "/../../access/accessUtils.php";
+dieIfInvalidSessionOrRole("CAS");
+?>
 
 <p>Pagina del cassiere</p>
-
-<? endif; ?>

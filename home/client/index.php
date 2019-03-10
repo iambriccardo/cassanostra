@@ -1,35 +1,36 @@
-<? if (session_status() == PHP_SESSION_ACTIVE && $_SESSION["role"] === "CLI"): ?>
+<?php
+require_once __DIR__ . "/../../access/accessUtils.php";
+dieIfInvalidSessionOrRole("CLI");
+?>
 
-    <div class="row">
-        <div class="col s12 m3">
-            <div class="card">
-                <div class="card-content">
-                    <div class="row">
-                        <div class="col s12 m6 offset-m3">
-                            <!-- Il percorso relativo si basa sull'index.php all'interno di client -->
-                            <img src="../res/fidelity_card.png">
-                        </div>
-                        <div class="col s12 m12">
-                            <span class="card-title">Fidelity card</span>
-                        </div>
-
-                        <div class="col s12 m12">
-                            <p>Card no. 23546567</p>
-                            <p>Saldo 30$</p>
-                        </div>
+<div class="row">
+    <div class="col s12 m3">
+        <div class="card">
+            <div class="card-content">
+                <div class="row">
+                    <div class="col s12 m6 offset-m3">
+                        <!-- Il percorso relativo si basa sull'index.php all'interno di home -->
+                        <img src="../res/fidelity_card.png">
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col s12 m9">
-            <div class="card">
-                <div class="card-content">
-                    <div class="row">
+                    <div class="col s12 m12">
+                        <span class="card-title">Fidelity card</span>
+                    </div>
 
+                    <div class="col s12 m12">
+                        <p>Card no. 23546567</p>
+                        <p>Saldo 30$</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="col s12 m9">
+        <div class="card">
+            <div class="card-content">
+                <div class="row">
 
-<? endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
