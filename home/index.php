@@ -23,8 +23,7 @@ checkAccessAndRedirectIfNeeded();
 
 <body>
     <?php
-    // la tab corrente potrebbe essere messa in POST se più conveniente
-    printNavbar($_SESSION["role"], $_SESSION["firstName"], $_SESSION["lastName"], $_GET["tab"]);
+    printNavbar($_SESSION["role"], $_SESSION["firstName"], $_SESSION["lastName"], $_POST["tab"]);
     printPageContent($_SESSION["role"]);
     ?>
 
