@@ -6,7 +6,11 @@ function parseConfigFileOrLoadDefaults()
 {
     $defaultConfig = [ "marketName" => "CassaNostra", "accentColor" => "#0266d8" ];
 
-    $parsedConfig = parse_ini_file("config.ini");
+    $configFileName = 'config.ini';
+    if(!is_file($configFileName))
+        file_put_contents($configFileName, "");
+
+    $parsedConfig = parse_ini_file($configFileName);
     if ($parsedConfig === false)
         return $defaultConfig;
     else
