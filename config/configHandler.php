@@ -1,12 +1,12 @@
 <?php
 
-$config = parseConfigFileOrLoadDefaults();
+$configFileName = 'config.ini';
+$config = parseConfigFileOrLoadDefaults($configFileName);
 
-function parseConfigFileOrLoadDefaults()
+function parseConfigFileOrLoadDefaults($configFileName)
 {
-    $defaultConfig = [ "marketName" => "CassaNostra", "accentColor" => "#0266d8" ];
+    $defaultConfig = [ "marketName" => "CassaNostra", "accentColor" => "0266d8" ];
 
-    $configFileName = 'config.ini';
     if(!is_file($configFileName))
         file_put_contents($configFileName, "");
 
@@ -15,12 +15,11 @@ function parseConfigFileOrLoadDefaults()
         return $defaultConfig;
     else
     {
-        if (!isset($parsedConfig["marketName"]))
-            $parsedConfig["marketName"] = $defaultConfig["marketName"];
-
-        if (!isset($parsedConfig["accentColor"]))
-            $parsedConfig["accentColor"] = $defaultConfig["accentColor"];
-
+        foreach (array_keys($defaultConfig) as $key)
+        {
+            if (!isset($parsedConfig[$key]))
+                $parsedConfig[$key] = $defaultConfig[$key];
+        }
         return $parsedConfig;
     }
 }
@@ -30,11 +29,11 @@ function parseConfigFileOrLoadDefaults()
  */
 function writeConfigOnFile()
 {
-    global $config;
+    global $config, $configFileName;
     $fileContent = "";
 
     foreach (array_keys($config) as $key)
         $fileContent .= "{$key} = {$config[$key]}\n";
 
-    file_put_contents("config.ini", $fileContent);
+    file_put_contents($configFileName, $fileContent);
 }

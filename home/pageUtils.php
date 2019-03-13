@@ -27,13 +27,13 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
 
     // Barra principale
     $navbarHtml = '
-    <nav class="nav-extended" style="background-color: ' . getAccentColor() . '">
+    <nav class="nav-extended" style="background-color: #' . getAccentColor() . '">
         <div class="nav-wrapper">
             <a class="brand-logo left">' . getMarketName() . '</a>
             <a class="brand-logo center hide-on-small-and-down">' . getRoleName($userRole) . '</a>
             <ul id="nav-mobile" class="right">
-                <li><i class="small material-icons">person</i></li>
-                <li>' . "&ensp;$userFirstName $userLastName&ensp;" . '</li>
+                <li class="hide-on-small-and-down"><i class="small material-icons">person</i></li>
+                <li class="hide-on-small-and-down">' . "&ensp;$userFirstName $userLastName&ensp;" . '</li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </div>';
@@ -107,6 +107,9 @@ function printPageContent($userRole)
         require "{$redirectUrl}/index.php";
 }
 
+/**
+ * Ritorna il colore del tema di default NON preceduto da #
+ */
 function getAccentColor() : string
 {
     global $config;
