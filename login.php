@@ -24,14 +24,14 @@ checkAccessAndRedirectIfNeeded();
 <body class="valign-wrapper">
 <div class="container">
     <div class="row">
-        <div class="col s6 offset-s3">
+        <div class="col s12 m6 offset-m3">
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Login</span>
                     <form action="access/accessHandler.php" method="POST">
                         <div class="row">
                             <div class="col s12">
-                                <p>Benvenuto in CassaNostra, per iniziare accedi con le tue credenziali.</p>
+                                <p>Benvenuto in <?= getMarketName() ?>!<br>Accedi con le tue credenziali.</p>
                             </div>
                             <div class="input-field col s12">
                                 <input id="username" name="username" type="text" class="validate">

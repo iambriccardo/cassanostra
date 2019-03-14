@@ -1,6 +1,6 @@
 <?php
 
-$configFileName = 'config.ini';
+$configFileName = __DIR__ . '/config.ini';
 $config = parseConfigFileOrLoadDefaults($configFileName);
 
 function parseConfigFileOrLoadDefaults($configFileName)
