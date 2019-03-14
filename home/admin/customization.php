@@ -3,19 +3,68 @@ require_once __DIR__ . "/../../access/accessUtils.php";
 dieIfInvalidSessionOrRole("ADM");
 require_once __DIR__ . "/../../lib/htmlpurifier/HTMLPurifier.standalone.php";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] == 0)
+$uploadFailureReason = null;
+function handleSubmit()
 {
-    if ($_POST["action"] === "branding")
+    $customLogoPath = __DIR__ . "/../../res/logo.png";
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] == 0)
     {
-        global $config;
-        $purifier = new HTMLPurifier();
-        $config["marketName"] = $purifier->purify($_POST["marketName"]);
-        $config["accentColor"] = $purifier->purify($_POST["accentColor"]);
-        writeConfigOnFile();
+        if ($_POST["action"] === "branding")
+        {
+            global $config;
+            $purifier = new HTMLPurifier();
+            $config["marketName"] = $purifier->purify($_POST["marketName"]);
+            $config["accentColor"] = $purifier->purify($_POST["accentColor"]);
+            writeConfigOnFile();
+            header("Refresh: 0");   // reload page to apply modifications
+            exit();
+        }
+        else if ($_POST["action"] === "logo")
+        {
+            global $uploadFailureReason;
+            if ($_FILES["logo"]["error"] === UPLOAD_ERR_NO_FILE)
+            {
+                $uploadFailureReason = "Nessun file selezionato!";
+                return;
+            }
+
+            // Controlla che l'upload non sia fallito
+            if ($_FILES["logo"]["error"] !== UPLOAD_ERR_OK)
+            {
+                $uploadFailureReason = "Caricamento fallito!";
+                return;
+            }
+
+            // Controlla che il file non superi i 3MB
+            if ($_FILES["logo"]["size"] > 3145728)
+            {
+                $uploadFailureReason = "File troppo grande.";
+                return;
+            }
+
+            // Controlla che sia un'immagine PNG valida
+            $imageInfo = getimagesize($_FILES["logo"]["tmp_name"]);
+            if (!$imageInfo || $imageInfo[2] !== IMAGETYPE_PNG)
+            {
+                $uploadFailureReason = "Il file caricato non è nel formato richiesto.";
+                return;
+            }
+
+            $moveSuccessful = move_uploaded_file($_FILES['logo']['tmp_name'], $customLogoPath);
+            if (!$moveSuccessful)
+                $uploadFailureReason = "Errore nel salvataggio del file caricato.";
+        }
+        else if ($_POST["action"] === "removeLogo")
+        {
+            if (file_exists($customLogoPath))
+                unlink($customLogoPath);
+        }
         header("Refresh: 0");   // reload page to apply modifications
         exit();
     }
 }
+
+handleSubmit();
 ?>
 
 <style>
@@ -36,12 +85,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] == 0)
     .input-field {
         margin-top: 32px;
     }
+
+    .form-row {
+        margin-top: 24px;
+    }
 </style>
 
 <div class="row">
     <div class="col s12 m6">
         <div class="card-panel">
-            <span class="card-panel-title">Personalizza il branding</span>
+            <span class="card-panel-title">Personalizza l'aspetto</span>
             <form method="post">
                 <div class="input-field">
                     <input id="marketName" name="marketName" type="text" value="<?= getMarketName() ?>">
@@ -65,6 +118,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] == 0)
     <div class="col s12 m6">
         <div class="card-panel">
             <span class="card-panel-title">Carica il tuo logo</span>
+            <form enctype="multipart/form-data" method="post">
+                <div class="form-row">
+                    Immagine attuale <i>(in caso di trasparenza viene applicato il colore del tema come sfondo)</i>:&nbsp;
+                    <?=
+                    file_exists(__DIR__ . "/../../res/logo.png") ?
+                        '<br>
+                         <img alt="Logo"
+                         style="margin-top: 16px; max-height: 120px; background-color: #' . getAccentColor() . '"
+                         src="../res/logo.png" >' : "logo di default"
+                    ?>
+                </div>
+                <div class="form-row">
+                    Carica un'immagine (max 3MB, formato PNG):<br>
+                    <input style="margin-top: 16px;" type="file" name="logo" accept="image/png">
+                    <?=
+                    $GLOBALS["uploadFailureReason"] != null
+                        ? "<div class=\"form-row\"><b>Errore:</b> {$GLOBALS["uploadFailureReason"]}</div>"
+                        : ""
+                    ?>
+                </div>
+                <input type="hidden" name="tab" value="0">
+                <input type="hidden" name="action" value="logo">
+                <div class="row" style="margin: 24px 0 0">
+                    <?=
+                    file_exists(__DIR__ . "/../../res/logo.png")
+                        ? '<button form="removeForm" class="btn waves-effect waves-light" type="submit">Ripristina logo di default</button>'
+                        : ""
+                    ?>
+                    <button class="btn waves-effect waves-light right" type="submit">Carica</button>
+                </div>
+            </form>
+
+            <!-- Form nascosta usata per la rimozione del logo attuale -->
+            <form id="removeForm" method="post">
+                <input type="hidden" name="tab" value="0">
+                <input type="hidden" name="action" value="removeLogo">
+            </form>
         </div>
     </div>
 </div>

@@ -29,7 +29,10 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
     $navbarHtml = '
     <nav class="nav-extended" style="background-color: #' . getAccentColor() . '">
         <div class="nav-wrapper">
-            <a class="brand-logo left">' . getMarketName() . '</a>
+            <img alt="' . getMarketName() . '"
+                 style="max-height: 64px; width: auto; padding: 8px;"
+                 class="brand-logo left"
+                 src="' . (file_exists(__DIR__ . "/../res/logo.png") ? '../res/logo.png' : '../res/default_logo.png') . '" />
             <a class="brand-logo center hide-on-small-and-down">' . getRoleName($userRole) . '</a>
             <ul id="nav-mobile" class="right">
                 <li class="hide-on-small-and-down"><i class="small material-icons">person</i></li>
