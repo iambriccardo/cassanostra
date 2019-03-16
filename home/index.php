@@ -18,7 +18,6 @@ checkAccessAndRedirectIfNeeded();
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="styles.css"/>
 
     <!-- Misc Materialize CSS overrides to enforce theming -->
     <style>
