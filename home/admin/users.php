@@ -4,12 +4,10 @@ require_once __DIR__ . "/../../db/queries.php";
 dieIfInvalidSessionOrRole("ADM");
 
 $registrationFailed = null;
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] == 1)
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
 {
     if ($_POST["action"] == "register")
     {
-        global $registrationFailed;
-
         $purifier = new HTMLPurifier();
         $firstName = $purifier->purify($_POST['firstName']);
         $lastName = $purifier->purify($_POST['lastName']);

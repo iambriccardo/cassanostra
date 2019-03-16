@@ -1,8 +1,19 @@
 <?php
 require_once '../access/accessUtils.php';
 require_once 'pageUtils.php';
+require_once '../db/queries.php';
 
 checkAccessAndRedirectIfNeeded();
+
+$passwordChangeFailed = null;
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd")
+{
+    if (!empty($_POST["newPwd"]))
+        $passwordChangeFailed = !attemptPasswordUpdate($_SESSION["username"], $_POST["currentPwd"], $_POST["newPwd"]);
+    else
+        $passwordChangeFailed = true;
+}
+
 ?>
 
 <html lang="it">
@@ -13,7 +24,6 @@ checkAccessAndRedirectIfNeeded();
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title><?= getRoleName($_SESSION["role"]) . ' - ' . getMarketName() ?></title>
-
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -83,12 +93,22 @@ checkAccessAndRedirectIfNeeded();
 <script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Inizializza le tab di Materialize
+        // Inizializza i componenti JS di Materialize
         $(".tabs").tabs();
-        // Inizializza le modal windows
         $(".modal").modal();
-        // Inizializza i select
         $('select').formSelect();
+
+        var elems = document.querySelectorAll('.dropdown-trigger');
+        M.Dropdown.init(elems, { coverTrigger: false });
+
+        // Stampa messaggio di errore/riuscita del cambio password
+        <?php
+        if ($GLOBALS["passwordChangeFailed"] !== null)
+        {
+            $message = $GLOBALS["passwordChangeFailed"] ? "Aggiornamento della password fallito." : "Aggiornamento della password riuscito.";
+            echo "M.toast({html: '$message'});";
+        }
+        ?>
     });
 </script>
 </body>

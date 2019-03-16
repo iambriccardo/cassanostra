@@ -1,4 +1,10 @@
 <?php
+/**
+ * @file
+ * I metodi in questo file richiedono che i dati passati per parametro non siano vuoti e che
+ * siano già filtrati da possibili attacchi XSS.
+ * I prepared statement vengono utilizzati in tutte le casistiche in cui vi è la possibilità di attacchi SQL injection.
+ */
 
 function connectToDB($host = "localhost", $username = "qvanto", $password = "", $dbName = "my_qvanto")
 {
@@ -10,6 +16,29 @@ function connectToDB($host = "localhost", $username = "qvanto", $password = "", 
     }
 
     return $connection;
+}
+
+function isUserPasswordCorrect($username, $password)
+{
+    $connection = connectToDB();
+    $isPwdCorrect = false;
+
+    if ($query = $connection->prepare("SELECT Password FROM cnUtente WHERE Username = ?")) {
+        $query->bind_param("s", $username);
+        $query->execute();
+
+        $result = $query->get_result();
+
+        if ($result->num_rows > 0) {
+            if (password_verify($password, $result->fetch_assoc()['Password']))
+                $isPwdCorrect = true;
+        }
+
+        $query->close();
+    }
+
+    $connection->close();
+    return $isPwdCorrect;
 }
 
 function attemptLogin($username, $password)
@@ -42,7 +71,6 @@ function attemptLogin($username, $password)
     }
 
     $connection->close();
-
     return $isAllowed;
 }
 
@@ -75,6 +103,21 @@ function attemptRegistration($firstName, $lastName, $email, $username, $role, $p
 
     $connection->close();
     return $registrationSuccessful;
+}
+
+function attemptPasswordUpdate($username, $currentPassword, $newPassword)
+{
+    $updateSuccessful = false;
+    $connection = connectToDB();
+
+    if ($currentPassword === $newPassword || !isUserPasswordCorrect($username, $currentPassword))
+        return false;
+
+    $hashedNewPwd = password_hash($newPassword, PASSWORD_BCRYPT);
+    if ($connection->query("UPDATE cnUtente SET Password = '$hashedNewPwd' WHERE Username = '$username'"))
+        $updateSuccessful = true;
+
+    return $updateSuccessful;
 }
 
 function addNewStore($storeName)

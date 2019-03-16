@@ -4,12 +4,10 @@ require_once __DIR__ . "/../../db/queries.php";
 dieIfInvalidSessionOrRole("ADM");
 
 $additionFailed = null;
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] == 2)
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "2")
 {
     if ($_POST["action"] === "addStore")
     {
-        global $additionFailed;
-
         $purifier = new HTMLPurifier();
         $storeName = $purifier->purify($_POST["storeName"]);
 

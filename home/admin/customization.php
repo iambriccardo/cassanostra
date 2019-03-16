@@ -7,7 +7,7 @@ $uploadFailureReason = null;
 function handleSubmit()
 {
     $customLogoPath = __DIR__ . "/../../res/logo.png";
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] == 0)
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "0")
     {
         if ($_POST["action"] === "branding")
         {
@@ -16,8 +16,6 @@ function handleSubmit()
             $config["marketName"] = $purifier->purify($_POST["marketName"]);
             $config["accentColor"] = $purifier->purify($_POST["accentColor"]);
             writeConfigOnFile();
-            header("Refresh: 0");   // reload page to apply modifications
-            exit();
         }
         else if ($_POST["action"] === "logo")
         {
@@ -59,8 +57,8 @@ function handleSubmit()
             if (file_exists($customLogoPath))
                 unlink($customLogoPath);
         }
-        header("Refresh: 0");   // reload page to apply modifications
-        exit();
+
+        // TODO avvisare necessità reload
     }
 }
 
