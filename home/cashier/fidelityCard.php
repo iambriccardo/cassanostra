@@ -5,7 +5,7 @@ dieIfInvalidSessionOrRole("CAS");
 
 if (isset($_POST["registerFidelityCard"])) {
     $hasAccount = isset($_POST["hasAccount"]) && $_POST["hasAccount"] == "true";
-    $errorMessage = "";
+    $resultMessage = "Carta fedeltà creata con successo!";
 
     $purifier = new HTMLPurifier();
     $username = $purifier->purify($_POST["username"]);
@@ -17,13 +17,13 @@ if (isset($_POST["registerFidelityCard"])) {
         $role = "CLI";
 
         if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($role))
-            if (!attemptRegistration($firstName, $lastName, $email, $username, $role)) $errorMessage = "Errore durante la registrazione.";
+            if (!attemptRegistration($firstName, $lastName, $email, $username, $role)) $resultMessage = "Errore durante la registrazione.";
     }
 
-    if (!createFidelityCard($username)) $errorMessage = "Errore durante la creazione della carta fedeltà.";
+    if (!createFidelityCard($username)) $resultMessage = "Errore durante la creazione della carta fedeltà.";
 
-    if (!empty($errorMessage)) {
-        echo "<script>document.addEventListener('DOMContentLoaded', () => M.toast({html: '$errorMessage'}))</script>";
+    if (!empty($resultMessage)) {
+        echo "<script>document.addEventListener('DOMContentLoaded', () => M.toast({html: '$resultMessage'}))</script>";
     }
 }
 ?>

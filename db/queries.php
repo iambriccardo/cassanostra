@@ -118,7 +118,7 @@ function createFidelityCard($username, $points = 0) {
 
     if ($statement = $connection->prepare("INSERT INTO cnCartaFedelta (SaldoPunti, FK_Utente) VALUES (?, ?)"))
     {
-        $statement->bind_param("ii", $points, $userID);
+        $statement->bind_param("is", $points, $username);
         $statement->execute();
         if ($statement->errno === 0)
             $creationSuccessful = true;
