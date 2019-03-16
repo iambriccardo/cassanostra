@@ -77,6 +77,25 @@ function attemptRegistration($firstName, $lastName, $email, $username, $role, $p
     return $registrationSuccessful;
 }
 
+function addNewStore($storeName)
+{
+    $additionSuccessful = false;
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("INSERT INTO cnPuntoVendita (NomePunto) VALUES (?)"))
+    {
+        $statement->bind_param("s", $storeName);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $additionSuccessful = true;
+
+        $statement->close();
+    }
+
+    $connection->close();
+    return $additionSuccessful;
+}
+
 function getUsersList()
 {
     $connection = connectToDB();
