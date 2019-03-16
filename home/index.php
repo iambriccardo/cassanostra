@@ -22,15 +22,28 @@ checkAccessAndRedirectIfNeeded();
 
     <!-- Misc Materialize CSS overrides to enforce theming -->
     <style>
+        form {
+            margin: 0;
+        }
+
+        form .row {
+            margin-bottom: 0;
+        }
+
         nav .brand-logo {
             font-size: 1.8rem;
         }
 
-        .btn, .btn:hover {
+        .fixed-action-btn {
+            right: 32px;
+            bottom: 32px;
+        }
+
+        .btn, .btn:hover, .btn-floating, .btn-floating:hover {
             background-color: #<?= getAccentColor() ?>;
         }
 
-        .btn:hover {
+        .btn:hover, .btn-floating:hover {
             filter: brightness(115%);
         }
 
@@ -50,6 +63,14 @@ checkAccessAndRedirectIfNeeded();
         input:not(.browser-default):focus:not([readonly]) + label {
             color: #<?= getAccentColor() ?> !important;
         }
+
+        .select-wrapper input.select-dropdown:focus {
+            border-bottom: 1px solid #<?= getAccentColor() ?>;
+        }
+
+        .dropdown-content li > a, .dropdown-content li > span {
+            color: rgba(0,0,0,0.87);
+        }
     </style>
 </head>
 
@@ -62,11 +83,13 @@ checkAccessAndRedirectIfNeeded();
 <script type="text/javascript" src="../lib/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
 <script>
-    // Inizializza le tab di Materialize se presenti
     $(document).ready(function() {
-        tabs = $(".tabs");
-        if (tabs != null)
-            tabs.tabs();
+        // Inizializza le tab di Materialize
+        $(".tabs").tabs();
+        // Inizializza le modal windows
+        $(".modal").modal();
+        // Inizializza i select
+        $('select').formSelect();
     });
 </script>
 </body>

@@ -48,23 +48,33 @@ function attemptLogin($username, $password)
 
 function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role)
 {
-    $connection = connectToDB();
     $isAllowed = false;
 
-    $hashed_pwd = password_hash($password, PASSWORD_BCRYPT);
-
-    if ($query = $connection->prepare("INSERT INTO cnUtente (Username, Password, Email, Nome, Cognome, Ruolo) VALUES (?, ?, ?, ?, ?, ?)")) {
-        $query->bind_param("ssssss", $username, $hashed_pwd, $email, $firstName, $lastName, $role);
-        $query->execute();
-
+    $registrationSuccessful = attemptRegistration($firstName, $lastName, $email, $username, $role, $password);
+    if ($registrationSuccessful)
         $isAllowed = attemptLogin($username, $password);
 
-        $query->close();
+    return $isAllowed;
+}
+
+function attemptRegistration($firstName, $lastName, $email, $username, $role, $password = "cambiami")
+{
+    $registrationSuccessful = false;
+    $connection = connectToDB();
+    $hashed_pwd = password_hash($password, PASSWORD_BCRYPT);
+
+    if ($statement = $connection->prepare("INSERT INTO cnUtente (Username, Password, Email, Nome, Cognome, Ruolo) VALUES (?, ?, ?, ?, ?, ?)"))
+    {
+        $statement->bind_param("ssssss", $username, $hashed_pwd, $email, $firstName, $lastName, $role);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $registrationSuccessful = true;
+
+        $statement->close();
     }
 
     $connection->close();
-
-    return $isAllowed;
+    return $registrationSuccessful;
 }
 
 function getUsersList()
