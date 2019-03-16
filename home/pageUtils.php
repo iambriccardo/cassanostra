@@ -14,6 +14,10 @@ $tabs = [
         new NavbarTab("Statistiche", "stats.php"),
         new NavbarTab("Cassieri", "cashiers.php"),
         new NavbarTab("Bilancio generale", "report.php")
+    ],
+    "CAS" => [
+        new NavbarTab("Registratore di cassa", "cashRegister.php"),
+        new NavbarTab("Carte fedeltà", "fidelityCard.php")
     ]
 ];
 

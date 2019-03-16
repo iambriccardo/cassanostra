@@ -92,3 +92,21 @@ function generateTableHtmlFromQueryResult($headerNames, $resultRows)
 {
     // TODO
 }
+
+function createFidelityCard($username, $points = 0) {
+    $creationSuccessful = false;
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("INSERT INTO cnCartaFedelta (SaldoPunti, FK_Utente) VALUES (?, ?)"))
+    {
+        $statement->bind_param("ii", $points, $userID);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $creationSuccessful = true;
+
+        $statement->close();
+    }
+
+    $connection->close();
+    return $creationSuccessful;
+}

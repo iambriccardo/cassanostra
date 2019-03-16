@@ -44,7 +44,7 @@ checkAccessAndRedirectIfNeeded();
                             </div>
                         </div>
                         <div class="right-align">
-                            <button class="btn waves-effect waves-light  indigo accent-4" type="submit"
+                            <button class="btn waves-effect waves-light indigo accent-4" type="submit"
                                     name="loginAction">
                                 Login
                             </button>

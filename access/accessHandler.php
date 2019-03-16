@@ -1,5 +1,6 @@
 <?php
 require_once '../db/queries.php';
+require_once __DIR__ . "/../lib/htmlpurifier/HTMLPurifier.standalone.php";
 
 function showLoader()
 {
@@ -38,15 +39,15 @@ function handleClientRegistration()
 {
     if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password']))
     {
-        $firstName = $_POST['firstName'];
-        $lastName = $_POST['lastName'];
-        $email = $_POST['email'];
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $clientRole = "CLI";
+        $purifier = new HTMLPurifier();
+        $firstName = $purifier->purify($_POST['firstName']);
+        $lastName = $purifier->purify($_POST['lastName']);
+        $email = $purifier->purify($_POST['email']);
+        $username = $purifier->purify($_POST['username']);
+        $role = "CLI";
 
         if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password))
-            attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $clientRole);
+            attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role);
 
         checkAccessAndRedirectIfNeeded("register.php");
     }
