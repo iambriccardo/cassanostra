@@ -20,10 +20,35 @@ checkAccessAndRedirectIfNeeded();
     <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="styles.css"/>
 
-    <!-- Misc Materialize CSS overrides -->
+    <!-- Misc Materialize CSS overrides to enforce theming -->
     <style>
         nav .brand-logo {
             font-size: 1.8rem;
+        }
+
+        .btn, .btn:hover {
+            background-color: #<?= getAccentColor() ?>;
+        }
+
+        .btn:hover {
+            filter: brightness(115%);
+        }
+
+        .page-footer {
+            background-color: #<?= getAccentColor() ?>;
+        }
+
+        .nav-extended {
+            background-color: #<?= getAccentColor() ?>;
+        }
+
+        input:not(.browser-default):focus:not([readonly]) {
+            border-bottom: 1px solid #<?= getAccentColor() ?> !important;
+            box-shadow: 0 1px 0 0 #<?= getAccentColor() ?> !important;
+        }
+
+        input:not(.browser-default):focus:not([readonly]) + label {
+            color: #<?= getAccentColor() ?> !important;
         }
     </style>
 </head>

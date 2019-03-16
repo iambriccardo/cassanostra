@@ -27,7 +27,7 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
 
     // Barra principale
     $navbarHtml = '
-    <nav class="nav-extended" style="background-color: #' . getAccentColor() . '">
+    <nav class="nav-extended">
         <div class="nav-wrapper">
             <img alt="' . getMarketName() . '"
                  style="max-height: 64px; width: auto; padding: 8px;"
