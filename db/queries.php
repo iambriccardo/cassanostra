@@ -6,7 +6,7 @@
  * I prepared statement vengono utilizzati in tutte le casistiche in cui vi è la possibilità di attacchi SQL injection.
  */
 
-function connectToDB($host = "localhost", $username = "qvanto", $password = "", $dbName = "my_qvanto")
+function connectToDB($host = "localhost", $username = "qvanto", $password = "", $dbName = "my_qvanto") : mysqli
 {
     $connection = new mysqli($host, $username, $password, $dbName);
 
@@ -18,7 +18,7 @@ function connectToDB($host = "localhost", $username = "qvanto", $password = "", 
     return $connection;
 }
 
-function isUserPasswordCorrect($username, $password)
+function isUserPasswordCorrect($username, $password) : bool
 {
     $connection = connectToDB();
     $isPwdCorrect = false;
@@ -41,7 +41,7 @@ function isUserPasswordCorrect($username, $password)
     return $isPwdCorrect;
 }
 
-function attemptLogin($username, $password)
+function attemptLogin($username, $password) : bool
 {
     $connection = connectToDB();
     $isAllowed = false;
@@ -74,7 +74,7 @@ function attemptLogin($username, $password)
     return $isAllowed;
 }
 
-function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role)
+function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role) : bool
 {
     $isAllowed = false;
 
@@ -85,7 +85,7 @@ function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $
     return $isAllowed;
 }
 
-function attemptRegistration($firstName, $lastName, $email, $username, $role, $password = "cambiami")
+function attemptRegistration($firstName, $lastName, $email, $username, $role, $password = "cambiami") : bool
 {
     $registrationSuccessful = false;
     $connection = connectToDB();
@@ -105,7 +105,7 @@ function attemptRegistration($firstName, $lastName, $email, $username, $role, $p
     return $registrationSuccessful;
 }
 
-function attemptPasswordUpdate($username, $currentPassword, $newPassword)
+function attemptPasswordUpdate($username, $currentPassword, $newPassword) : bool
 {
     $updateSuccessful = false;
     $connection = connectToDB();
@@ -120,7 +120,7 @@ function attemptPasswordUpdate($username, $currentPassword, $newPassword)
     return $updateSuccessful;
 }
 
-function addNewStore($storeName)
+function addNewStore($storeName) : bool
 {
     $additionSuccessful = false;
     $connection = connectToDB();
@@ -139,23 +139,49 @@ function addNewStore($storeName)
     return $additionSuccessful;
 }
 
-function getUsersList()
+/**
+ * Ottiene la lista degli utenti, ritornando opzionalmente gli utenti che hanno nel nome, cognome o username
+ * la stringa specificata.
+ * @param string|null $nameFilter la stringa da usare come parametro di ricerca
+ * @return array l'array dei risultati; null in caso di fallimento
+ */
+function getUsersList(string $nameFilter = null) : array
 {
     $connection = connectToDB();
-    $result = $connection->query("SELECT Username, Email, Nome, Cognome, Ruolo FROM cnUtente");
+
+    if (empty($nameFilter))
+        $result = $connection->query("SELECT Username, Email, Nome, Cognome, Ruolo FROM cnUtente");
+    else
+    {
+        if ($statement = $connection->prepare(
+            "SELECT Username, Email, Nome, Cognome, Ruolo FROM cnUtente WHERE Nome LIKE ? OR Cognome LIKE ? OR Username LIKE ?"
+        ))
+        {
+            $wildcardFilter = "%$nameFilter%";
+            $statement->bind_param("sss", $wildcardFilter, $wildcardFilter, $wildcardFilter);
+            $statement->execute();
+            $result = $statement->get_result();
+        }
+    }
 
     if ($result == false)
         return null;
     else
-        return $result->fetch_all();
+        return $result->fetch_all(MYSQLI_ASSOC);
 }
 
-function generateTableHtmlFromQueryResult($headerNames, $resultRows)
+function getStoresList() : array
 {
-    // TODO
+    $connection = connectToDB();
+    $result = $connection->query("SELECT ID_PuntoVendita AS Codice, NomePunto AS Nome FROM cnPuntoVendita");
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
 }
 
-function createFidelityCard($username, $points = 0) {
+function createFidelityCard(string $username, int $points = 0) : bool {
     $creationSuccessful = false;
     $connection = connectToDB();
 
@@ -171,4 +197,17 @@ function createFidelityCard($username, $points = 0) {
 
     $connection->close();
     return $creationSuccessful;
+}
+
+/**
+ * Genera il codice per la tabella HTML dato il risultato di una query sotto forma di array associativo.
+ * Le intestazioni delle colonne sono stampate utilizzando array_keys, pertanto è importante che l'array sia il
+ * risultato di una chiamata a mysqli_result::fetch_all passando come parametro MYSQLI_ASSOC.
+ * @param array $assocResultArray risultato della query
+ * @param string $htmlClasses (facoltativo) le classi HTML usate per stilizzare la tabella
+ * @return string HTML da stampare nella pagina
+ */
+function generateTableHtmlFromQueryResult(array $assocResultArray, string $htmlClasses = "responsive-table striped") : string
+{
+    // TODO
 }
