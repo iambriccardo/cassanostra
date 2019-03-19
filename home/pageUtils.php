@@ -81,11 +81,11 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
                             <div class="modal-content">
                                 <h3>Cambia password</h3>
                                 <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12 m6">
                                         <input id="currentPwd" name="currentPwd" type="password" class="validate">
                                         <label for="currentPwd">Password attuale</label>
                                     </div>
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12 m6">
                                         <input id="newPwd" name="newPwd" type="password" class="validate">
                                         <label for="newPwd">Nuova password</label>
                                     </div>

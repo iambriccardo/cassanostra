@@ -36,21 +36,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
         <div class="modal-content">
             <h3>Registra un nuovo utente</h3>
             <div class="row">
-                <div class="input-field col s6">
+                <div class="input-field col s12 m6">
                     <input id="firstName" name="firstName" type="text" class="validate">
                     <label for="firstName">Nome</label>
                 </div>
-                <div class="input-field col s6">
+                <div class="input-field col s12 m6">
                     <input id="lastName" name="lastName" type="text" class="validate">
                     <label for="lastName">Cognome</label>
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s6">
+                <div class="input-field col s12 m6">
                     <input id="username" name="username" type="text" class="validate">
                     <label for="username">Username</label>
                 </div>
-                <div class="input-field col s6">
+                <div class="input-field col s12 m6">
                     <input id="email" name="email" type="text" class="validate">
                     <label for="email">Email</label>
                 </div>
