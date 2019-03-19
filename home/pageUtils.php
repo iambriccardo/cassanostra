@@ -18,6 +18,9 @@ $tabs = [
     "CAS" => [
         new NavbarTab("Registratore di cassa", "cashRegister.php"),
         new NavbarTab("Carte fedeltà", "fidelityCard.php")
+    ],
+    "CLI" => [
+        new NavbarTab("Sommario", "summary.php")
     ]
 ];
 
@@ -51,14 +54,12 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
         </div>';
 
     // Tabs
-    if (array_key_exists($userRole, $tabs))
-    {
+    if (array_key_exists($userRole, $tabs)) {
         $navbarHtml .= '<div class="nav-content">
                         <ul class="tabs tabs-transparent">';
 
         $index = 0;
-        foreach ($tabs[$userRole] as $tab)
-        {
+        foreach ($tabs[$userRole] as $tab) {
             $navbarHtml .= "<li class=\"tab\"><a ";
             if (!empty($selectedTab) && $selectedTab == $index)
                 $navbarHtml .= 'class="active" ';
@@ -108,8 +109,7 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
 function printPageContent($userRole)
 {
     global $tabs;
-    switch ($userRole)
-    {
+    switch ($userRole) {
         case "MAG":
             $redirectUrl = "warehouse";
             break;
@@ -131,26 +131,23 @@ function printPageContent($userRole)
     }
 
     // Il contenuto delle singole tab viene caricato tutto assieme, poi Materialize mostrerà soltanto il div della tab corrispondente.
-    // Il codice JavaScript che inizializza le tab è in home/index.php. Per maggiori dettagli: materializecss.com/tabs.html
-    if (array_key_exists($userRole, $tabs))
-    {
+    // Il codice JavaScript che inizializza le tab è in home/summary.php. Per maggiori dettagli: materializecss.com/tabs.html
+    if (array_key_exists($userRole, $tabs)) {
         $index = 0;
-        foreach ($tabs[$userRole] as $tab)
-        {
+        foreach ($tabs[$userRole] as $tab) {
             echo "<div id=\"$index\">";
             require "{$redirectUrl}/{$tab->page()}";
             echo "</div>";
             $index++;
         }
-    }
-    else
+    } else
         require "{$redirectUrl}/index.php";
 }
 
 /**
  * Ritorna il colore del tema di default NON preceduto da #
  */
-function getAccentColor() : string
+function getAccentColor(): string
 {
     global $config;
     return $config["accentColor"];
@@ -164,8 +161,7 @@ function getMarketName(): string
 
 function getRoleName($userRole): string
 {
-    switch ($userRole)
-    {
+    switch ($userRole) {
         case "MAG":
             return "Magazzino";
         case "ADM":
