@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
 require_once __DIR__ . "/../../db/queries.php";
+require_once __DIR__ . "/../../utils/tableUtils.php";
 dieIfInvalidSessionOrRole("ADM");
 
 $registrationFailed = null;
@@ -27,9 +28,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
         echo "<script>document.addEventListener('DOMContentLoaded', () => M.toast({html: '$message'}))</script>";
     }
 }
+
+$listData = [];
+$nameFilter = "";
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["action"] == "list")
+{
+    $purifier = new HTMLPurifier();
+    $nameFilter = $purifier->purify($_POST['nameFilter']);
+    $listData = getUsersList($nameFilter);
+}
+else
+    $listData = getUsersList();
+
 ?>
 
-<p>Utenti</p>
+<div class="card-panel container centered">
+    <span class="card-panel-title">Visualizza utenti</span>
+    <form method="post">
+        Filtra per nome:
+        <div class="input-field inline" style="vertical-align: unset">
+            <input id="nameFilter" name="nameFilter" type="text" value="<?= $nameFilter ?>">
+        </div>
+        <button class="btn waves-effect waves-light" type="submit" style="margin-left: 32px">Aggiorna</button>
+
+        <input type="hidden" name="tab" value="1">
+        <input type="hidden" name="action" value="list">
+    </form>
+
+    <? printHtmlTableFromAssocArray($listData) ?>
+</div>
 
 <div id="registerModal" class="modal">
     <form method="post">

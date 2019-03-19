@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
 require_once __DIR__ . "/../../db/queries.php";
+require_once __DIR__ . "/../../utils/tableUtils.php";
 dieIfInvalidSessionOrRole("ADM");
 
 $additionFailed = null;
@@ -23,9 +24,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "2")
         echo "<script>document.addEventListener('DOMContentLoaded', () => M.toast({html: '$message'}))</script>";
     }
 }
+
+$listData = getStoresList();
 ?>
 
-<p>Negozi</p>
+<div class="card-panel container centered">
+    <span class="card-panel-title">Visualizza punti vendita</span>
+
+    <? printHtmlTableFromAssocArray($listData) ?>
+</div>
 
 <div id="addStoreModal" class="modal">
     <form method="post">

@@ -66,11 +66,6 @@ handleSubmit();
 ?>
 
 <style>
-    .card-panel-title {
-        font-size: 32px;
-        font-weight: 300
-    }
-
     .color-box {
         width: 24px;
         height: 24px;
@@ -80,7 +75,7 @@ handleSubmit();
         top: 12px;
     }
 
-    .input-field {
+    .input-field:not(.inline) {
         margin-top: 32px;
     }
 

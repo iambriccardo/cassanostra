@@ -1,38 +1,31 @@
 <?php
 
 /**
- * Builds an html table from a given set of data.
+ * Builds an HTML table from a given set of data.
  *
- * @param $data data which is used to build the table. The data must be an array containing associative arrays.
- * @param $classes additional classes for the table html element.
+ * @param $data array which is used to build the table. The data must be an array containing associative arrays.
+ * @param $classes string classes for the table html element.
  */
-function buildTable($data, $classes = "") {
-    $counter = 0;
-
+function printHtmlTableFromAssocArray(array $data, string $classes = "")
+{
     echo "<table class='responsive-table striped ${classes}'>";
 
+    // Print table header
+    $columns = array_keys($data[0]);
+    echo "<thead>";
+    echo "<tr>";
+    for ($i = 0; $i < count($columns); $i++) {
+        echo "<th>" . $columns[$i] . "</th>";
+    }
+    echo "</tr>";
+    echo "</thead>";
+
+    // Print table content
     foreach ($data as $row) {
-        $columns = array_keys($row);
-
-        // Print table header.
-        if ($counter == 0) {
-            echo "<thead>";
-            echo "<tr>";
-            for ($i = 0; $i < count($columns); $i++) {
-                echo "<th>" . $columns[$i] . "</th>";
-            }
-            echo "</tr>";
-            echo "</thead>";
-        }
-
-        // Print table content.
         echo "<tr>";
-        for ($i = 0; $i < count($columns); $i++) {
-            echo "<td>" . $row[$columns[$i]] . "</td>";
-        }
+        foreach ($row as $column)
+            echo "<td>" . $column . "</td>";
         echo "</tr>";
-
-        $counter++;
     }
 
     echo "</table>";

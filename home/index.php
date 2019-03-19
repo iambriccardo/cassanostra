@@ -31,6 +31,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd")
 
     <!-- Misc Materialize CSS overrides to enforce theming -->
     <style>
+        .card-panel.centered {
+            margin: .5rem auto 1rem;
+        }
+
+        .card-panel-title {
+            font-size: 32px;
+            font-weight: 300
+        }
+
         form {
             margin: 0;
         }
