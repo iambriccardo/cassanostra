@@ -154,7 +154,7 @@ function getUsersList(string $nameFilter = null) : array
     else
     {
         if ($statement = $connection->prepare(
-            "SELECT Username, Email, Nome, Cognome, Ruolo FROM cnUtente WHERE Nome LIKE ? OR Cognome LIKE ? OR Username LIKE ?"
+            "SELECT Nome, Cognome, Username, Email, Ruolo FROM cnUtente WHERE Nome LIKE ? OR Cognome LIKE ? OR Username LIKE ?"
         ))
         {
             $wildcardFilter = "%$nameFilter%";
