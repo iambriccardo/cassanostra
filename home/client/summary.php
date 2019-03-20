@@ -287,14 +287,28 @@ dieIfInvalidSessionOrRole("CLI");
             </div>
         </div>
     </div>
-<?php
-if ($noCard)
-    echo '<div class="card-action">
+    <?php
+    if ($noCard)
+        echo '<div class="card-action">
              <a href="#">Richiedi la tua carta</a>
           </div>';
- ?>
+    ?>
 </div>
 
 <div class="card-panel container centered">
     <span class="card-panel-title">Attività recenti</span>
+    <ul class="collection">
+        <?php
+        $result = getClientRecentActivities($_SESSION['username']);
+
+        while ($row = $result->fetch_assoc()) {
+            echo '<li class="collection-item avatar">
+      <i class="material-icons circle" style="background-color: #' . getAccentColor() .'">shopping_cart</i>
+      <span class="title">' . $row['NomeProdotto'] . '</span>
+      <p class="">' . '<b>Produttore:</b> ' . $row['Produttore'] . '<br>' . '<b>Quantità:</b> ' . $row['Quantita'] . '</p>
+      <a class="secondary-content"><i class="material-icons grey-text">receipt</i>'. '<span class="grey-text" style="margin: 8px">' . '<b>n.' . $row['NumeroFattura'] . '</b>' . ' | ' . $row['DataFattura'] . '</span>' . '</a>
+    </li>';
+        }
+        ?>
+    </ul>
 </div>
