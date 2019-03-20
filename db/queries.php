@@ -181,6 +181,40 @@ function getStoresList() : array
         return $result->fetch_all(MYSQLI_ASSOC);
 }
 
+function getProductEANsList() : array
+{
+    $connection = connectToDB();
+    $result = $connection->query("SELECT EAN_Prodotto FROM cnProdotto");
+
+    if ($result == false)
+        return null;
+    else
+    {
+        $eanList = [];
+        while ($row = $result->fetch_row())
+            $eanList[] = $row[0];
+
+        return $eanList;
+    }
+}
+
+function getSuppliersNames() : array
+{
+    $connection = connectToDB();
+    $result = $connection->query("SELECT DISTINCT Azienda FROM cnUtente WHERE Azienda != NULL AND Ruolo = 'FOR'");
+
+    if ($result == false)
+        return null;
+    else
+    {
+        $suppliersNames = [];
+        while ($row = $result->fetch_row())
+            $suppliersNames[] = $row[0];
+
+        return $suppliersNames;
+    }
+}
+
 function createFidelityCard(string $username, int $points = 0) : bool {
     $creationSuccessful = false;
     $connection = connectToDB();
