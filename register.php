@@ -1,6 +1,6 @@
 <?php
 require 'access/accessUtils.php';
-require_once 'home/pageUtils.php';
+require_once 'utils/pageUtils.php';
 
 checkAccessAndRedirectIfNeeded("register.php");
 ?>
