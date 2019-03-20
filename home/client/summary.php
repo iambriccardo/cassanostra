@@ -10,15 +10,6 @@ dieIfInvalidSessionOrRole("CLI");
         box-sizing: border-box;
     }
 
-    body {
-        width: 100vw;
-        height: 100vh;
-        font-family: 'Montserrat', 'Helvetica', sans-serif;
-        font-size: 14px;
-        line-height: 1.3;
-        background-color: #fff;
-    }
-
     .right .strip-top {
         width: calc(50vw + 90px);
         -webkit-transform: skewX(20deg) translateX(160px);
@@ -34,6 +25,8 @@ dieIfInvalidSessionOrRole("CLI");
     .fidelity-card {
         width: 400px;
         height: 250px;
+        line-height: 1.3;
+        margin: 16px auto;
     }
 
     .flip {
@@ -258,61 +251,50 @@ dieIfInvalidSessionOrRole("CLI");
 
 </style>
 
-<div class="row">
-    <div class="col s12 m6 offset-m3">
-        <div class="card">
-            <div class="card-content">
-                <?php
-                $cardData = getFidelityCardData($_SESSION['username']);
-                $noCard = empty($cardData);
-                $cardNumber = $noCard ? "****" : $cardData['ID_Carta'];
-                $points = $noCard ? "**" : $cardData['SaldoPunti'];
-                ?>
-                <div class="fidelity-card">
-                    <div class="flip">
-                        <div class="front">
-                            <div class="investor">Carta fedeltà <b><?= getMarketName() ?></b></div>
-                            <div class="chip">
-                                <div class="chip-line"></div>
-                                <div class="chip-line"></div>
-                                <div class="chip-line"></div>
-                                <div class="chip-line"></div>
-                                <div class="chip-main"></div>
-                            </div>
-                            <div class="fidelity-card-number">
-                                <div class="section"><?= $cardNumber ?></div>
-                            </div>
-                            <div class="end"><span class="end-text">Saldo punti:</span><span
-                                        class="end-date"> <?= $points ?></span></div>
-                            <div class="fidelity-card-holder"><?= $_SESSION['username'] ?></div>
-                        </div>
-                        <div class="back">
-                            <div class="strip-black"></div>
-                            <div class="terms">
-                                <p>Questa carta è di proprietà di <?= getMarketName() ?>, se trovata si è pregati di
-                                    portarla in negozio per ridarla al proprietario.</p>
-                                <p>L'utilizzo di questa carta segue i termini come nell'accordo stipulato al suo
-                                    ricevimento.</p>
-                            </div>
-                        </div>
-                    </div>
+<div class="container centered">
+    <?php
+    $cardData = getFidelityCardData($_SESSION['username']);
+    $noCard = empty($cardData);
+    $cardNumber = $noCard ? "****" : str_pad($cardData['ID_Carta'], 6, '0', STR_PAD_LEFT);
+    $points = $noCard ? "**" : $cardData['SaldoPunti'];
+    ?>
+    <div class="fidelity-card">
+        <div class="flip">
+            <div class="front">
+                <div class="investor">Carta fedeltà <b><?= getMarketName() ?></b></div>
+                <div class="chip">
+                    <div class="chip-line"></div>
+                    <div class="chip-line"></div>
+                    <div class="chip-line"></div>
+                    <div class="chip-line"></div>
+                    <div class="chip-main"></div>
+                </div>
+                <div class="fidelity-card-number">
+                    <div class="section"><?= $cardNumber ?></div>
+                </div>
+                <div class="end"><span class="end-text">Saldo punti:</span><span
+                            class="end-date"> <?= $points ?></span></div>
+                <div class="fidelity-card-holder"><?= "{$_SESSION['firstName']} {$_SESSION['lastName']}" ?></div>
+            </div>
+            <div class="back">
+                <div class="strip-black"></div>
+                <div class="terms">
+                    <p>Questa carta è di proprietà di <?= getMarketName() ?>, se trovata si è pregati di
+                        portarla in negozio per ridarla al proprietario.</p>
+                    <p>L'utilizzo di questa carta segue i termini come nell'accordo stipulato al suo
+                        ricevimento.</p>
                 </div>
             </div>
-            <?php
-            if ($noCard)
-                echo '<div class="card-action">
-                <a href="#">Richiedi la tua carta</a>
-            </div>';
-
-            ?>
         </div>
     </div>
-    <div class="col s12 m6 offset-m3">
-        <div class="card">
-            <ul class="collection with-header">
-                <li class="collection-header"><h5>Attività recenti</h5></li>
-            </ul>
-        </div>
-    </div>
+<?php
+if ($noCard)
+    echo '<div class="card-action">
+             <a href="#">Richiedi la tua carta</a>
+          </div>';
+ ?>
+</div>
 
+<div class="card-panel container centered">
+    <span class="card-panel-title">Attività recenti</span>
 </div>
