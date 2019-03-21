@@ -29,15 +29,14 @@ if (isset($_POST["registerFidelityCard"])) {
     }
 }
 
-if ($_POST["hasAccount"])
-{
+if ($_POST["hasAccount"]) {
     $script = "<script>
                document.addEventListener('DOMContentLoaded', function() {
                    M.Autocomplete.init(document.getElementById('username'), {
-                       data: {\n";
-                           foreach (getUsersList() as $user)
-                               $script .= $user["Username"] . ": null,\n";
-    $script .=         "}
+                       data: {;\n";
+    foreach (getUsersList() as $user)
+        $script .= $user["Username"] . ": null,\n";
+    $script .= "}
                    });
                });
               </script>";

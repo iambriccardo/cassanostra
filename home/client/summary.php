@@ -255,7 +255,7 @@ dieIfInvalidSessionOrRole("CLI");
     $cardData = getFidelityCardData($_SESSION['username']);
     $noCard = empty($cardData);
     $cardNumber = $noCard ? "****" : str_pad($cardData['ID_Carta'], 6, '0', STR_PAD_LEFT);
-    $points = $noCard ? "**" : $cardData['SaldoPunti'];
+    $points = $noCard ? "Richiedi la carta" : $cardData['SaldoPunti'];
     ?>
     <div class="fidelity-card">
         <div class="flip">
@@ -278,20 +278,13 @@ dieIfInvalidSessionOrRole("CLI");
             <div class="back">
                 <div class="strip-black"></div>
                 <div class="terms">
-                    <p>Questa carta è di proprietà di <?= getMarketName() ?>, se trovata si è pregati di
-                        portarla in negozio per ridarla al proprietario.</p>
-                    <p>L'utilizzo di questa carta segue i termini come nell'accordo stipulato al suo
-                        ricevimento.</p>
+                    <p>Questa carta è stata rilasciata da <?= getMarketName() ?>, se trovata si è pregati di
+                        portarla immediatamente nel punto vendita più vicino.</p>
+                    <p>L'utilizzo di questa carta segue i termini stilati nell'accordo di sottoscrizione.</p>
                 </div>
             </div>
         </div>
     </div>
-    <?php
-    if ($noCard)
-        echo '<div class="card-action">
-             <a href="#">Richiedi la tua carta</a>
-          </div>';
-    ?>
 </div>
 
 <div class="card-panel container centered">
@@ -302,10 +295,10 @@ dieIfInvalidSessionOrRole("CLI");
 
         while ($row = $result->fetch_assoc()) {
             echo '<li class="collection-item avatar">
-      <i class="material-icons circle" style="background-color: #' . getAccentColor() .'">shopping_cart</i>
+      <i class="material-icons circle" style="background-color: #' . getAccentColor() . '">shopping_cart</i>
       <span class="title">' . $row['NomeProdotto'] . '</span>
       <p class="">' . '<b>Produttore:</b> ' . $row['Produttore'] . '<br>' . '<b>Quantità:</b> ' . $row['Quantita'] . '</p>
-      <a class="secondary-content"><i class="material-icons grey-text">receipt</i>'. '<span class="grey-text" style="margin: 8px">' . '<b>n.' . $row['NumeroFattura'] . '</b>' . ' | ' . $row['DataFattura'] . '</span>' . '</a>
+      <a class="secondary-content"><i class="material-icons grey-text">receipt</i>' . '<span class="grey-text" style="margin: 8px">' . '<b>n.' . $row['NumeroFattura'] . '</b>' . ' | ' . $row['DataFattura'] . '</span>' . '</a>
     </li>';
         }
         ?>

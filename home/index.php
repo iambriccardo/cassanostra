@@ -6,8 +6,7 @@ require_once '../db/queries.php';
 checkAccessAndRedirectIfNeeded();
 
 $passwordChangeFailed = null;
-if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd")
-{
+if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
     if (!empty($_POST["newPwd"]))
         $passwordChangeFailed = !attemptPasswordUpdate($_SESSION["username"], $_POST["currentPwd"], $_POST["newPwd"]);
     else
@@ -74,12 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd")
         }
 
         input:not(.browser-default):focus:not([readonly]) {
-            border-bottom: 1px solid #<?= getAccentColor() ?> !important;
-            box-shadow: 0 1px 0 0 #<?= getAccentColor() ?> !important;
+            border-bottom: 1px solid # <?= getAccentColor() ?> !important;
+            box-shadow: 0 1px 0 0 # <?= getAccentColor() ?> !important;
         }
 
         input:not(.browser-default):focus:not([readonly]) + label {
-            color: #<?= getAccentColor() ?> !important;
+            color: # <?= getAccentColor() ?> !important;
         }
 
         .select-wrapper input.select-dropdown:focus {
@@ -87,33 +86,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd")
         }
 
         .dropdown-content li > a, .dropdown-content li > span {
-            color: rgba(0,0,0,0.87);
+            color: rgba(0, 0, 0, 0.87);
         }
     </style>
 </head>
 
 <body>
-    <?php
-    printNavbar($_SESSION["role"], $_SESSION["firstName"], $_SESSION["lastName"], $_POST["tab"]);
-    printPageContent($_SESSION["role"]);
-    ?>
+<?php
+printNavbar($_SESSION["role"], $_SESSION["firstName"], $_SESSION["lastName"], $_POST["tab"]);
+printPageContent($_SESSION["role"]);
+?>
 
 <script type="text/javascript" src="../lib/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Inizializza i componenti JS di Materialize
         $(".tabs").tabs();
         $(".modal").modal();
         $('select').formSelect();
 
         var elems = document.querySelectorAll('.dropdown-trigger');
-        M.Dropdown.init(elems, { coverTrigger: false });
+        M.Dropdown.init(elems, {coverTrigger: false});
 
         // Stampa messaggio di errore/riuscita del cambio password
         <?php
-        if ($GLOBALS["passwordChangeFailed"] !== null)
-        {
+        if ($GLOBALS["passwordChangeFailed"] !== null) {
             $message = $GLOBALS["passwordChangeFailed"] ? "Aggiornamento della password fallito." : "Aggiornamento della password riuscito.";
             echo "M.toast({html: '$message'});";
         }

@@ -19,6 +19,68 @@ checkAccessAndRedirectIfNeeded("register.php");
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="lib/materialize/css/materialize.min.css" media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="styles.css"/>
+
+    <!-- Misc Materialize CSS overrides to enforce theming -->
+    <style>
+        .card-panel.centered {
+            margin: .5rem auto 1rem;
+        }
+
+        .card-panel-title {
+            font-size: 32px;
+            font-weight: 300
+        }
+
+        form {
+            margin: 0;
+        }
+
+        form .row {
+            margin-bottom: 0;
+        }
+
+        nav .brand-logo {
+            font-size: 1.8rem;
+        }
+
+        .fixed-action-btn {
+            right: 32px;
+            bottom: 32px;
+        }
+
+        .btn, .btn:hover, .btn-floating, .btn-floating:hover {
+            background-color: #<?= getAccentColor() ?>;
+        }
+
+        .btn:hover, .btn-floating:hover {
+            filter: brightness(115%);
+        }
+
+        .page-footer {
+            background-color: #<?= getAccentColor() ?>;
+        }
+
+        .nav-extended {
+            background-color: #<?= getAccentColor() ?>;
+        }
+
+        input:not(.browser-default):focus:not([readonly]) {
+            border-bottom: 1px solid #<?= getAccentColor() ?> !important;
+            box-shadow: 0 1px 0 0 #<?= getAccentColor() ?> !important;
+        }
+
+        input:not(.browser-default):focus:not([readonly]) + label {
+            color: #<?= getAccentColor() ?> !important;
+        }
+
+        .select-wrapper input.select-dropdown:focus {
+            border-bottom: 1px solid #<?= getAccentColor() ?>;
+        }
+
+        .dropdown-content li > a, .dropdown-content li > span {
+            color: rgba(0,0,0,0.87);
+        }
+    </style>
 </head>
 
 <body class="valign-wrapper">
@@ -56,7 +118,7 @@ checkAccessAndRedirectIfNeeded("register.php");
                             </div>
                         </div>
                         <div class="right-align">
-                            <button class="btn waves-effect waves-light  indigo accent-4" type="submit"
+                            <button class="btn waves-effect waves-light" type="submit"
                                     name="registrationAction">
                                 Registrati
                             </button>

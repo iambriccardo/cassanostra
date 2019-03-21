@@ -24,33 +24,33 @@ dieIfInvalidSessionOrRole("MAG");
     <div class="col s12 m12 l6 center offset-l3">
         <table class="striped highlight responsive-table">
             <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Marca</th>
-                    <th>Prezzo</th>
-                    <th>Quantita'</th>
-                </tr>
+            <tr>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Prezzo</th>
+                <th>Quantita'</th>
+            </tr>
             </thead>
 
             <tbody>
-                <tr>
-                    <td>Alvin</td>
-                    <td>Eclair</td>
-                    <td>$0.87</td>
-                    <td>2</td>
-                </tr>
-                <tr>
-                    <td>Alan</td>
-                    <td>Jellybean</td>
-                    <td>$3.76</td>
-                    <td>4</td>
-                </tr>
-                <tr>
-                    <td>Jonathan</td>
-                    <td>Lollipop</td>
-                    <td>$7.00</td>
-                    <td>7 miliardi</td>
-                </tr>
+            <tr>
+                <td>Alvin</td>
+                <td>Eclair</td>
+                <td>$0.87</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>Alan</td>
+                <td>Jellybean</td>
+                <td>$3.76</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>Jonathan</td>
+                <td>Lollipop</td>
+                <td>$7.00</td>
+                <td>7 miliardi</td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -69,13 +69,13 @@ dieIfInvalidSessionOrRole("MAG");
 
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('select').formSelect();
     });
 
 </script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.fixed-action-btn').floatingActionButton();
     });
 </script>

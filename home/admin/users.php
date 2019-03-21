@@ -5,10 +5,8 @@ require_once __DIR__ . "/../../utils/tableUtils.php";
 dieIfInvalidSessionOrRole("ADM");
 
 $registrationFailed = null;
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
-{
-    if ($_POST["action"] == "register")
-    {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1") {
+    if ($_POST["action"] == "register") {
         $purifier = new HTMLPurifier();
         $firstName = $purifier->purify($_POST['firstName']);
         $lastName = $purifier->purify($_POST['lastName']);
@@ -22,8 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
             $registrationFailed = true;
     }
 
-    if ($registrationFailed !== null)
-    {
+    if ($registrationFailed !== null) {
         $message = $registrationFailed ? "Registrazione fallita." : "Registrazione riuscita.";
         echo "<script>document.addEventListener('DOMContentLoaded', () => M.toast({html: '$message'}))</script>";
     }
@@ -31,13 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
 
 $listData = [];
 $nameFilter = "";
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["action"] == "list")
-{
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["action"] == "list") {
     $purifier = new HTMLPurifier();
     $nameFilter = $purifier->purify($_POST['nameFilter']);
     $listData = getUsersList($nameFilter);
-}
-else
+} else
     $listData = getUsersList();
 
 ?>
@@ -112,8 +107,7 @@ else
 </div>
 
 <script>
-    function openRegisterModal()
-    {
+    function openRegisterModal() {
         M.Modal.getInstance(document.getElementById("registerModal")).open();
     }
 </script>

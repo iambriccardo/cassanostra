@@ -5,10 +5,8 @@ require_once __DIR__ . "/../../utils/tableUtils.php";
 dieIfInvalidSessionOrRole("ADM");
 
 $additionFailed = null;
-if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "2")
-{
-    if ($_POST["action"] === "addStore")
-    {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "2") {
+    if ($_POST["action"] === "addStore") {
         $purifier = new HTMLPurifier();
         $storeName = $purifier->purify($_POST["storeName"]);
 
@@ -18,8 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "2")
             $additionFailed = true;
     }
 
-    if ($additionFailed !== null)
-    {
+    if ($additionFailed !== null) {
         $message = $additionFailed ? "Aggiunta fallita." : "Aggiunta riuscita.";
         echo "<script>document.addEventListener('DOMContentLoaded', () => M.toast({html: '$message'}))</script>";
     }
@@ -62,8 +59,7 @@ $listData = getStoresList();
 </div>
 
 <script>
-    function openAddStoreModal()
-    {
+    function openAddStoreModal() {
         M.Modal.getInstance(document.getElementById("addStoreModal")).open();
     }
 </script>
