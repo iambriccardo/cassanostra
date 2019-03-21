@@ -111,7 +111,6 @@ dieIfInvalidSessionOrRole("CLI");
         border: 1px solid #333;
         border-radius: 3px;
         background-image: linear-gradient(to bottom left, #efdbab, #e1cb94);
-        z-index: 1;
     }
 
     .fidelity-card-number {

@@ -270,18 +270,3 @@ ORDER BY F.DataFattura, V.DataOra DESC")) {
 
     return null;
 }
-
-
-/**
- * Genera il codice per la tabella HTML dato il risultato di una query sotto forma di array associativo.
- * Le intestazioni delle colonne sono stampate utilizzando array_keys, pertanto è importante che l'array sia il
- * risultato di una chiamata a mysqli_result::fetch_all passando come parametro MYSQLI_ASSOC.
- * @param array $assocResultArray risultato della query
- * @param string $htmlClasses (facoltativo) le classi HTML usate per stilizzare la tabella
- * @return string HTML da stampare nella pagina
- */
-function generateTableHtmlFromQueryResult(array $assocResultArray, string $htmlClasses = "responsive-table striped"): string
-{
-    // TODO
-    return null;
-}
