@@ -248,6 +248,50 @@ function getFidelityCardData(string $username): array
     return array();
 }
 
+function getProductInventory($storeId, $nameOrEanFilter = null): array
+{
+    $connection = connectToDB();
+
+    if (empty($nameOrEanFilter))
+    {
+        if ($statement = $connection->prepare(
+            "SELECT NomeProdotto AS `Nome prodotto`, EAN_Prodotto AS Codice, (ProdAcquistati.Tot-COALESCE(ProdVenduti.Tot, 0)) AS `Quantità disponibile`
+            FROM
+            (
+                ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnAcquisto WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdAcquistati)
+                LEFT JOIN cnProdotto ON ProdAcquistati.FK_Prodotto = ID_Prodotto
+            ) LEFT JOIN ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnVendita, cnCassa WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdVenduti) ON ProdVenduti.FK_Prodotto = ID_Prodotto
+            GROUP BY ID_Prodotto"
+        )) {
+            $statement->bind_param("ii", $storeId, $storeId);
+            $statement->execute();
+            $result = $statement->get_result();
+        }
+    }
+    else {
+        if ($statement = $connection->prepare(
+            "SELECT NomeProdotto AS `Nome prodotto`, EAN_Prodotto AS Codice, (ProdAcquistati.Tot-COALESCE(ProdVenduti.Tot, 0)) AS `Quantità disponibile`
+            FROM
+            (
+                ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnAcquisto WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdAcquistati)
+                LEFT JOIN cnProdotto ON ProdAcquistati.FK_Prodotto = ID_Prodotto
+            ) LEFT JOIN ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnVendita, cnCassa WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdVenduti) ON ProdVenduti.FK_Prodotto = ID_Prodotto
+            WHERE NomeProdotto LIKE ? OR EAN_Prodotto LIKE ?
+            GROUP BY ID_Prodotto"
+        )) {
+            $wildcardFilter = "%$nameOrEanFilter%";
+            $statement->bind_param("iiss", $storeId, $storeId, $wildcardFilter, $wildcardFilter);
+            $statement->execute();
+            $result = $statement->get_result();
+        }
+    }
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
+}
+
 function getClientRecentActivities(string $username)
 {
     $connection = connectToDB();

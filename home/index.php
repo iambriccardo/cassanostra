@@ -56,11 +56,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
             bottom: 32px;
         }
 
-        .btn, .btn:hover, .btn-floating, .btn-floating:hover {
+        .btn, .btn:hover, .btn-large, .btn-large:hover, .btn-small, .btn-small:hover, .btn-floating, .btn-floating:hover,
+        .btn:focus, .btn-large:focus, .btn-small:focus, .btn-floating:focus {
             background-color: #<?= getAccentColor() ?>;
         }
 
-        .btn:hover, .btn-floating:hover {
+        .btn:hover, .btn-floating:hover,
+        .btn:focus, .btn-large:focus, .btn-small:focus, .btn-floating:focus {
             filter: brightness(115%);
         }
 

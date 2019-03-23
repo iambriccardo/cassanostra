@@ -21,6 +21,10 @@ $tabs = [
     ],
     "CLI" => [
         new NavbarTab("Sommario", "summary.php")
+    ],
+    "MAG" => [
+        new NavbarTab("Inventario prodotti", "inventory.php"),
+        new NavbarTab("Inserimento fattura di acquisto", "purchaseInvoice.php")
     ]
 ];
 
