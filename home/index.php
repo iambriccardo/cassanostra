@@ -90,6 +90,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
         .dropdown-content li > a, .dropdown-content li > span {
             color: rgba(0, 0, 0, 0.87);
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 

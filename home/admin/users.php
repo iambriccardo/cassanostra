@@ -13,9 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1") {
         $email = $purifier->purify($_POST['email']);
         $username = $purifier->purify($_POST['username']);
         $role = $purifier->purify($_POST["role"]);
+        $company = $purifier->purify($_POST["company"]);
 
         if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($role))
-            $registrationFailed = !attemptRegistration($firstName, $lastName, $email, $username, $role);
+            $registrationFailed = !attemptRegistration($firstName, $lastName, $email, $username, $role, $company);
         else
             $registrationFailed = true;
     }
@@ -79,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["ac
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <select id="role" name="role" required>
+                    <select id="role" name="role" required onchange="showOrHideCompanyField()">
                         <option value="CLI" selected>Cliente</option>
                         <option value="MAG">Magazziniere</option>
                         <option value="DIR">Direttore</option>
@@ -87,6 +88,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["ac
                         <option value="FOR">Fornitore</option>
                     </select>
                     <label for="role">Ruolo</label>
+                </div>
+            </div>
+            <div id="companyRow" class="row hidden">
+                <div class="input-field col s12">
+                    <input type="text" name="company" id="company">
+                    <label for="company">Azienda</label>
                 </div>
             </div>
         </div>
@@ -101,13 +108,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["ac
 </div>
 
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large pulse" onclick="openRegisterModal()">
+    <a class="btn-floating btn-large pulse" onclick="M.Modal.getInstance(document.getElementById('registerModal')).open()">
         <i class="large material-icons">add</i>
     </a>
 </div>
 
 <script>
-    function openRegisterModal() {
-        M.Modal.getInstance(document.getElementById("registerModal")).open();
+    function showOrHideCompanyField()
+    {
+        if (document.getElementById("role").value === "FOR")
+            document.getElementById("companyRow").classList.remove('hidden');
+        else
+            document.getElementById("companyRow").classList.add('hidden');
     }
 </script>

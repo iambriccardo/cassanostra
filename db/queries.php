@@ -85,14 +85,16 @@ function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $
     return $isAllowed;
 }
 
-function attemptRegistration($firstName, $lastName, $email, $username, $role, $password = "cambiami"): bool
+function attemptRegistration($firstName, $lastName, $email, $username, $role, $company, $password = "cambiami"): bool
 {
     $registrationSuccessful = false;
     $connection = connectToDB();
     $hashed_pwd = password_hash($password, PASSWORD_BCRYPT);
 
-    if ($statement = $connection->prepare("INSERT INTO cnUtente (Username, Password, Email, Nome, Cognome, Ruolo) VALUES (?, ?, ?, ?, ?, ?)")) {
-        $statement->bind_param("ssssss", $username, $hashed_pwd, $email, $firstName, $lastName, $role);
+    if ($statement = $connection->prepare("INSERT INTO cnUtente (Username, Password, Email, Nome, Cognome, Ruolo, Azienda) VALUES (?, ?, ?, ?, ?, ?, ?)"))
+    {
+        $companyOnlyIfSupplier = ($role === "FOR" && !empty($company)) ? $company : null;
+        $statement->bind_param("sssssss", $username, $hashed_pwd, $email, $firstName, $lastName, $role, $companyOnlyIfSupplier);
         $statement->execute();
         if ($statement->errno === 0)
             $registrationSuccessful = true;
