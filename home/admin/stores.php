@@ -37,14 +37,14 @@ $listData = getStoresList();
             <h3>Registra un nuovo punto vendita</h3>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="storeName" name="storeName" type="text" class="validate">
+                    <input id="storeName" name="storeName" type="text" required>
                     <label for="storeName">Nome negozio</label>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
-            <button type="submit" class="modal-close waves-effect waves-green btn-flat">Aggiungi</button>
+            <button type="submit" class="waves-effect waves-green btn-flat">Aggiungi</button>
         </div>
 
         <input type="hidden" name="tab" value="2">
