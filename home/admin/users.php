@@ -59,27 +59,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["ac
             <h3>Registra un nuovo utente</h3>
             <div class="row">
                 <div class="input-field col s12 m6">
-                    <input id="firstName" name="firstName" type="text" class="validate">
+                    <input id="firstName" name="firstName" type="text" required>
                     <label for="firstName">Nome</label>
                 </div>
                 <div class="input-field col s12 m6">
-                    <input id="lastName" name="lastName" type="text" class="validate">
+                    <input id="lastName" name="lastName" type="text" required>
                     <label for="lastName">Cognome</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12 m6">
-                    <input id="username" name="username" type="text" class="validate">
+                    <input id="username" name="username" type="text" required>
                     <label for="username">Username</label>
                 </div>
                 <div class="input-field col s12 m6">
-                    <input id="email" name="email" type="text" class="validate">
+                    <input id="email" name="email" type="email" required>
                     <label for="email">Email</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <select id="role" name="role">
+                    <select id="role" name="role" required>
                         <option value="CLI" selected>Cliente</option>
                         <option value="MAG">Magazziniere</option>
                         <option value="DIR">Direttore</option>
@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["ac
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
-            <button type="submit" class="modal-close waves-effect waves-green btn-flat">Registra</button>
+            <button type="submit" class="waves-effect waves-green btn-flat">Registra</button>
         </div>
 
         <input type="hidden" name="tab" value="1">
