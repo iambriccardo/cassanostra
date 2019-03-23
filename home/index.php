@@ -73,12 +73,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
         }
 
         input:not(.browser-default):focus:not([readonly]) {
-            border-bottom: 1px solid # <?= getAccentColor() ?> !important;
-            box-shadow: 0 1px 0 0 # <?= getAccentColor() ?> !important;
+            border-bottom: 1px solid #<?= getAccentColor() ?> !important;
+            box-shadow: 0 1px 0 0 #<?= getAccentColor() ?> !important;
         }
 
         input:not(.browser-default):focus:not([readonly]) + label {
-            color: # <?= getAccentColor() ?> !important;
+            color: #<?= getAccentColor() ?> !important;
         }
 
         .select-wrapper input.select-dropdown:focus {

@@ -83,18 +83,18 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
                                 <h3>Cambia password</h3>
                                 <div class="row">
                                     <div class="input-field col s12 m6">
-                                        <input id="currentPwd" name="currentPwd" type="password" class="validate">
+                                        <input id="currentPwd" name="currentPwd" type="password" required>
                                         <label for="currentPwd">Password attuale</label>
                                     </div>
                                     <div class="input-field col s12 m6">
-                                        <input id="newPwd" name="newPwd" type="password" class="validate">
+                                        <input id="newPwd" name="newPwd" type="password" required>
                                         <label for="newPwd">Nuova password</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annulla</a>
-                                <button type="submit" class="modal-close waves-effect waves-green btn-flat">Aggiorna</button>
+                                <button type="submit" class="waves-effect waves-green btn-flat">Aggiorna</button>
                             </div>
                             <input type="hidden" name="action" value="changePwd">
                         </form>

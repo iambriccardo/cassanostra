@@ -33,10 +33,10 @@ if ($_POST["hasAccount"]) {
     $script = "<script>
                document.addEventListener('DOMContentLoaded', function() {
                    M.Autocomplete.init(document.getElementById('username'), {
-                       data: {;\n";
-    foreach (getUsersList() as $user)
-        $script .= $user["Username"] . ": null,\n";
-    $script .= "}
+                       data: {\n";
+                        foreach (getUsersList() as $user)
+                            $script .= $user["Username"] . ": null,\n";
+    $script .= "      }
                    });
                });
               </script>";
@@ -50,7 +50,7 @@ if ($_POST["hasAccount"]) {
     <form method="POST">
         <div class="row">
             <div class="input-field col s12">
-                <input id="username" name="username" type="text" class="autocomplete validate" autocomplete="off">
+                <input id="username" name="username" type="text" class="autocomplete" autocomplete="off" required>
                 <label for="username">Username</label>
                 <p>
                     <label>
@@ -63,15 +63,15 @@ if ($_POST["hasAccount"]) {
             <?php
             if (!isset($_POST["hasAccount"])) {
                 echo '<div class="input-field col s12">
-                    <input id="firstName" name="firstName" type="text" class="validate">
+                    <input id="firstName" name="firstName" type="text" required>
                     <label for="firstName">Nome</label>
                 </div>
                 <div class="input-field col s12">
-                    <input id="lastName" name="lastName" type="text" class="validate">
+                    <input id="lastName" name="lastName" type="text" required>
                     <label for="lastName">Cognome</label>
                 </div>
                 <div class="input-field col s12">
-                    <input id="email" name="email" type="email" class="validate">
+                    <input id="email" name="email" type="email" required>
                     <label for="email">Email</label>
                 </div>';
             }

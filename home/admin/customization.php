@@ -14,13 +14,9 @@ function handleSubmit()
             $config["marketName"] = $purifier->purify($_POST["marketName"]);
             $config["accentColor"] = $purifier->purify($_POST["accentColor"]);
             writeConfigOnFile();
-        } else if ($_POST["action"] === "logo") {
+        }
+        else if ($_POST["action"] === "logo") {
             global $uploadFailureReason;
-            if ($_FILES["logo"]["error"] === UPLOAD_ERR_NO_FILE) {
-                $uploadFailureReason = "Nessun file selezionato!";
-                return;
-            }
-
             // Controlla che l'upload non sia fallito
             if ($_FILES["logo"]["error"] !== UPLOAD_ERR_OK) {
                 $uploadFailureReason = "Caricamento fallito!";
@@ -43,7 +39,8 @@ function handleSubmit()
             $moveSuccessful = move_uploaded_file($_FILES['logo']['tmp_name'], $customLogoPath);
             if (!$moveSuccessful)
                 $uploadFailureReason = "Errore nel salvataggio del file caricato.";
-        } else if ($_POST["action"] === "removeLogo") {
+        }
+        else if ($_POST["action"] === "removeLogo") {
             if (file_exists($customLogoPath))
                 unlink($customLogoPath);
         }
@@ -80,12 +77,12 @@ handleSubmit();
             <span class="card-panel-title">Personalizza l'aspetto</span>
             <form method="post">
                 <div class="input-field">
-                    <input id="marketName" name="marketName" type="text" value="<?= getMarketName() ?>">
+                    <input id="marketName" name="marketName" type="text" value="<?= getMarketName() ?>" required>
                     <label for="marketName">Nome del negozio/catena</label>
                 </div>
                 <div class="input-field">
                     <input id="accentColor" class="jscolor {valueElement:'accentColor',styleElement:'colorBox'}"
-                           name="accentColor" type="text" value="<?= getAccentColor() ?>">
+                           name="accentColor" type="text" value="<?= getAccentColor() ?>" required>
                     <label for="accentColor">Colore principale del tema</label>
                     <div id="colorBox" class="color-box"></div>
                 </div>
@@ -114,7 +111,7 @@ handleSubmit();
                 </div>
                 <div class="form-row">
                     Carica un'immagine (max 3MB, formato PNG):<br>
-                    <input style="margin-top: 16px;" type="file" name="logo" accept="image/png">
+                    <input style="margin-top: 16px;" type="file" name="logo" accept="image/png" required>
                     <?=
                     $GLOBALS["uploadFailureReason"] != null
                         ? "<div class=\"form-row\"><b>Errore:</b> {$GLOBALS["uploadFailureReason"]}</div>"
