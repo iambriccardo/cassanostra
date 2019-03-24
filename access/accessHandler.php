@@ -1,5 +1,5 @@
 <?php
-require_once '../db/queries.php';
+require_once '../queries/access.php';
 require_once __DIR__ . "/../lib/htmlpurifier/HTMLPurifier.standalone.php";
 
 function showLoader()

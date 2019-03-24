@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
-require_once __DIR__ . "/../../db/queries.php";
+require_once __DIR__ . "/../../queries/stores.php";
 require_once __DIR__ . "/../../utils/tableUtils.php";
 dieIfInvalidSessionOrRole("ADM");
 

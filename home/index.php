@@ -1,7 +1,7 @@
 <?php
 require_once '../access/accessUtils.php';
 require_once '../utils/pageUtils.php';
-require_once '../db/queries.php';
+require_once '../queries/access.php';
 
 checkAccessAndRedirectIfNeeded();
 

@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
+require_once __DIR__ . "/../../queries/products.php";
+require_once __DIR__ . "/../../queries/stores.php";
+require_once __DIR__ . "/../../queries/users.php";
 dieIfInvalidSessionOrRole("MAG");
 
 $successOrErrorMessage = null;

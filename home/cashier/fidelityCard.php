@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
-require_once __DIR__ . "/../../db/queries.php";
+require_once __DIR__ . "/../../queries/access.php";
+require_once __DIR__ . "/../../queries/users.php";
 dieIfInvalidSessionOrRole("CAS");
 
 if (isset($_POST["registerFidelityCard"])) {
@@ -29,21 +30,24 @@ if (isset($_POST["registerFidelityCard"])) {
     }
 }
 
-if ($_POST["hasAccount"]) {
-    $script = "<script>
-               document.addEventListener('DOMContentLoaded', function() {
-                   M.Autocomplete.init(document.getElementById('username'), {
-                       data: {\n";
-                        foreach (getUsersList() as $user)
-                            $script .= $user["Username"] . ": null,\n";
-    $script .= "      }
-                   });
-               });
-              </script>";
-
-    echo $script;
-}
 ?>
+
+<?php if ($_POST["hasAccount"]): ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+       M.Autocomplete.init(document.getElementById('username'), {
+           data: {
+            <?php
+            foreach (getUsersList() as $user)
+                echo $user["Username"] . ": null,\n";
+            ?>
+          }
+       });
+    });
+</script>
+
+<?php endif; ?>
 
 <div class="card-panel container centered">
     <span class="card-panel-title">Registra nuova carta fedeltà</span>
