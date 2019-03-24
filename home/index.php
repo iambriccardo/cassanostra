@@ -112,8 +112,14 @@ printPageContent($_SESSION["role"]);
         $(".modal").modal();
         $('select').formSelect();
 
-        var elems = document.querySelectorAll('.dropdown-trigger');
-        M.Dropdown.init(elems, {coverTrigger: false});
+        var dropdowns = document.querySelectorAll('.dropdown-trigger');
+        M.Dropdown.init(dropdowns, { coverTrigger: false });
+
+        var datepickers = document.querySelectorAll('.datepicker');
+        M.Datepicker.init(datepickers, {
+            autoClose: true,
+            format: 'yyyy-mm-dd'
+        });
 
         // Stampa messaggio di errore/riuscita del cambio password
         <?php

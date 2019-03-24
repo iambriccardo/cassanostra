@@ -85,7 +85,7 @@ function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $
     return $isAllowed;
 }
 
-function attemptRegistration($firstName, $lastName, $email, $username, $role, $company, $password = "cambiami"): bool
+function attemptRegistration($firstName, $lastName, $email, $username, $role, $company = null, $password = "cambiami"): bool
 {
     $registrationSuccessful = false;
     $connection = connectToDB();
@@ -145,7 +145,7 @@ function addNewStore($storeName): bool
  * @param string|null $nameFilter la stringa da usare come parametro di ricerca
  * @return array l'array dei risultati; null in caso di fallimento
  */
-function getUsersList(string $nameFilter = null): array
+function getUsersList(string $nameFilter = null)
 {
     $connection = connectToDB();
 
@@ -158,7 +158,9 @@ function getUsersList(string $nameFilter = null): array
             $wildcardFilter = "%$nameFilter%";
             $statement->bind_param("sss", $wildcardFilter, $wildcardFilter, $wildcardFilter);
             $statement->execute();
+
             $result = $statement->get_result();
+            $statement->close();
         }
     }
 
@@ -168,7 +170,7 @@ function getUsersList(string $nameFilter = null): array
         return $result->fetch_all(MYSQLI_ASSOC);
 }
 
-function getStoresList(): array
+function getStoresList()
 {
     $connection = connectToDB();
     $result = $connection->query("SELECT ID_PuntoVendita AS Codice, NomePunto AS Nome FROM cnPuntoVendita");
@@ -179,7 +181,7 @@ function getStoresList(): array
         return $result->fetch_all(MYSQLI_ASSOC);
 }
 
-function getProductEANsList(): array
+function getProductEANsList()
 {
     $connection = connectToDB();
     $result = $connection->query("SELECT EAN_Prodotto FROM cnProdotto");
@@ -195,20 +197,15 @@ function getProductEANsList(): array
     }
 }
 
-function getSuppliersNames(): array
+function getSuppliers()
 {
     $connection = connectToDB();
-    $result = $connection->query("SELECT DISTINCT Azienda FROM cnUtente WHERE Azienda != NULL AND Ruolo = 'FOR'");
+    $result = $connection->query("SELECT Username, Nome, Cognome, Azienda FROM cnUtente WHERE Azienda IS NOT NULL AND Ruolo = 'FOR'");
 
     if ($result == false)
         return null;
-    else {
-        $suppliersNames = [];
-        while ($row = $result->fetch_row())
-            $suppliersNames[] = $row[0];
-
-        return $suppliersNames;
-    }
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function createFidelityCard(string $username, int $points = 0): bool
@@ -227,6 +224,44 @@ function createFidelityCard(string $username, int $points = 0): bool
 
     $connection->close();
     return $creationSuccessful;
+}
+
+function registerNewProduct($productName, $productBrand, $eanCode): bool
+{
+    $registrationSuccessful = false;
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("INSERT INTO cnProdotto (NomeProdotto, Produttore, EAN_Prodotto) VALUES (?, ?, ?)"))
+    {
+        $statement->bind_param("sss", $productName, $productBrand, $eanCode);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $registrationSuccessful = true;
+
+        $statement->close();
+    }
+
+    $connection->close();
+    return $registrationSuccessful;
+}
+
+function getProductDetails($eanCode)
+{
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("SELECT NomeProdotto, Produttore, EAN_Prodotto FROM cnProdotto WHERE EAN_Prodotto = ?"))
+    {
+        $statement->bind_param("s", $eanCode);
+        $statement->execute();
+
+        $result = $statement->get_result();
+        $statement->close();
+    }
+
+    if ($result == false || $result->num_rows === 0)
+        return null;
+    else
+        return $result->fetch_assoc();
 }
 
 function getFidelityCardData(string $username): array
@@ -250,7 +285,7 @@ function getFidelityCardData(string $username): array
     return array();
 }
 
-function getProductInventory($storeId, $nameOrEanFilter = null): array
+function getProductInventory($storeId, $nameOrEanFilter = null)
 {
     $connection = connectToDB();
 
@@ -267,7 +302,9 @@ function getProductInventory($storeId, $nameOrEanFilter = null): array
         )) {
             $statement->bind_param("ii", $storeId, $storeId);
             $statement->execute();
+
             $result = $statement->get_result();
+            $statement->close();
         }
     }
     else {
@@ -284,7 +321,9 @@ function getProductInventory($storeId, $nameOrEanFilter = null): array
             $wildcardFilter = "%$nameOrEanFilter%";
             $statement->bind_param("iiss", $storeId, $storeId, $wildcardFilter, $wildcardFilter);
             $statement->execute();
+
             $result = $statement->get_result();
+            $statement->close();
         }
     }
 

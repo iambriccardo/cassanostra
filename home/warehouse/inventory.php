@@ -5,7 +5,6 @@ require_once __DIR__ . "/../../utils/tableUtils.php";
 require_once __DIR__ . "/../../lib/htmlpurifier/HTMLPurifier.standalone.php";
 dieIfInvalidSessionOrRole("MAG");
 
-$storesList = getStoresList();
 $listData = [];
 $nameOrEanFilter = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "0" && $_POST["action"] == "inventoryList") {
@@ -27,7 +26,7 @@ else
                 <div class="input-field inline" style="vertical-align: unset">
                     <select id="store" name="store" required>
                         <?php
-                        foreach ($storesList as $store)
+                        foreach (getStoresList() as $store)
                         {
                             $selectedString = $storeId === $store['Codice'] ? "selected" : "";
                             echo "<option value=\"{$store['Codice']}\" $selectedString>{$store['Nome']}</option>";
