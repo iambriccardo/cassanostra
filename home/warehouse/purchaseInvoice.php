@@ -9,6 +9,7 @@ $successOrErrorMessage = null;
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
 {
     $purifier = new HTMLPurifier();
+    // Aggiunta nuovo prodotto
     if ($_POST["action"] === "newProduct")
     {
         $productName = $purifier->purify($_POST["name"]);
@@ -25,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
         else
             $successOrErrorMessage = "Registrazione fallita: dati del prodotto mancanti.";
     }
+    // Operazioni relative alla fattura
     else if ($_POST["action"] === "invoice")
     {
         $_SESSION["warehouseInvoice"]["number"] = $purifier->purify($_POST["invoiceNr"]);
@@ -32,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
         $_SESSION["warehouseInvoice"]["supplierUser"] = $purifier->purify($_POST["supplierUser"]);
         $_SESSION["warehouseInvoice"]["store"] = $purifier->purify($_POST["store"]);
 
+        // Aggiunta prodotto alla lista
         if ($_POST["submitType"] === "addProduct")
         {
             if (!isset($_SESSION["warehouseInvoice"]["products"]))
@@ -43,12 +46,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
             else
             {
                 $productInfo["Quantita"] = $purifier->purify($_POST["productAmount"]);
-                $productInfo["PrezzoAcquisto"] = floatval($purifier->purify($_POST["price"]));
+                $productInfo["PrezzoAcquisto"] = floatval(str_replace(',', '.', $_POST["price"]));
                 if (!empty($productInfo["Quantita"]) && !empty($productInfo["PrezzoAcquisto"]))
                     $_SESSION["warehouseInvoice"]["products"][] = $productInfo;
                 else
                     $successOrErrorMessage = "Non sono stati forniti tutti i dati.";
             }
+        }
+        // Inserimento della fattura e degli acquisti su DB
+        else if ($_POST["submitType"] === "addInvoice")
+        {
+            $invoiceId = registerPurchaseInvoice($_SESSION["warehouseInvoice"]["number"], $_SESSION["warehouseInvoice"]["date"],
+                         $_SESSION["warehouseInvoice"]["supplierUser"]);
+            if ($invoiceId === 0)
+                $successOrErrorMessage = "Inserimento fallito: impossibile creare la fattura.";
+            else
+            {
+                $allPurchaseInsertionsOk = true;
+                foreach ($_SESSION["warehouseInvoice"]["products"] as $productInfo)
+                {
+                    $allPurchaseInsertionsOk = registerPurchase($productInfo['ID_Prodotto'], $productInfo['Quantita'],
+                                               $productInfo["PrezzoAcquisto"], $invoiceId, $_SESSION["warehouseInvoice"]["store"]);
+                }
+                unset($_SESSION["warehouseInvoice"]);
+
+                if ($allPurchaseInsertionsOk)
+                    $successOrErrorMessage = "Inserimento della fattura riuscito.";
+                else
+                    $successOrErrorMessage = "La fattura è stata creata, ma non tutti gli inserimenti delle distinte sono andati a buon fine.";
+            }
+        }
+        // Rimozione di un elemento dalla lista
+        else if (isset($_POST["removeItem"]))
+        {
+            $indexToRemove = intval($_POST["removeItem"]);
+            array_splice($_SESSION["warehouseInvoice"]["products"], $indexToRemove, 1);
         }
     }
 
@@ -106,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
             <h5>Dati fattura</h5>
             <div class="row">
                 <div class="input-field col s12 m4">
-                    <input type="text" id="invoiceNr" name="invoiceNr" value="<?= $_SESSION["warehouseInvoice"]["number"] ?>" required>
+                    <input type="text" id="invoiceNr" maxlength="10" name="invoiceNr" value="<?= $_SESSION["warehouseInvoice"]["number"] ?>" required>
                     <label for="invoiceNr">Numero fattura</label>
                 </div>
                 <div class="input-field col s12 m4">
@@ -138,7 +170,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
                     <label for="productCode">Codice prodotto</label>
 
                     <!-- bottone inline per aprire la modal di registrazione prodotto -->
-                    <a id="add-product-btn" class="waves-effect waves-teal btn-flat" onclick="M.Modal.getInstance(document.getElementById('newProductModal')).open()">
+                    <a id="add-product-btn" class="waves-effect waves-light btn-flat" onclick="M.Modal.getInstance(document.getElementById('newProductModal')).open()">
                         <i style="font-size: 1.6rem" class="material-icons">add_circle</i>
                     </a>
                 </div>
@@ -156,12 +188,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
             </div>
         </div>
 
+        <?php if (count($_SESSION["warehouseInvoice"]["products"]) > 0): ?>
+        <!-- "Tabella" distinte -->
         <ul class="collection">
+        <li class="collection-item">
+            <div class='row'>
+                <div class='col s12 m7'><b>Nome prodotto</b></div>
+                <div class='col s5 m2'><b>Quantità</b></div>
+                <div class='col s6 m2'><b>Prezzo unitario</b></div>
+            </div>
+        </li>
             <?php
+            $counter = 0;
             foreach ($_SESSION["warehouseInvoice"]["products"] as $productInfo)
-                echo "<li class=\"collection-item\">{$productInfo['NomeProdotto']}, {$productInfo['Quantita']} x €{$productInfo['PrezzoAcquisto']}</li>";
+            {
+                echo "<li class=\"collection-item\">
+                        <div class='row valign-wrapper'>
+                          <div class='col s12 m7'>{$productInfo['NomeProdotto']}</div>
+                          <div class='col s5 m2'>{$productInfo['Quantita']}</div>
+                          <div class='col s6 m2'>€{$productInfo['PrezzoAcquisto']}</div>
+                          <div class='col s1 right'>
+                            <button type='submit' class='waves-effect waves-light btn-flat' name='removeItem' value='{$counter}'>
+                                <i style=\"font-size: 1.6rem\" class=\"material-icons\">close</i>
+                            </button>
+                          </div>
+                        </div> 
+                      </li>";
+                $counter++;
+            }
             ?>
         </ul>
+        <?php endif; ?>
+
+        <div class="row right-align" style="padding-top: 16px">
+            <button <?= (count($_SESSION["warehouseInvoice"]["products"]) === 0 ? "disabled" : "") ?>
+                    class="btn waves-effect waves-light" type="submit" name="submitType" value="addInvoice">Inserisci fattura</button>
+        </div>
 
         <input type="hidden" name="tab" value="1">
         <input type="hidden" name="action" value="invoice">

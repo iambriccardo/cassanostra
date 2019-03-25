@@ -17,6 +17,42 @@ function getProductEANsList()
     }
 }
 
+function registerPurchaseInvoice($invoiceNumber, $invoiceDate, $supplierUser)
+{
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("INSERT INTO cnFattura (NumeroFattura, DataFattura, FK_Utente, ScontrinoCassa) VALUES (?, ?, ?, 0)"))
+    {
+        $statement->bind_param("iss", $invoiceNumber, $invoiceDate, $supplierUser);
+        $statement->execute();
+        $statement->close();
+    }
+
+    // Ritorna l'ID della riga appena inserita oppure 0 se l'inserimento è fallito
+    $insertId = $connection->insert_id;
+    $connection->close();
+    return $insertId;
+}
+
+function registerPurchase($productId, $productAmount, $productPrice, $invoiceId, $storeId)
+{
+    $registrationSuccessful = false;
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("INSERT INTO cnAcquisto (FK_Prodotto, Quantita, PrezzoAcquisto, FK_Fattura, FK_PuntoVendita, FK_UtenteMagazziniere) VALUES (?, ?, ?, ?, ?, ?)"))
+    {
+        $statement->bind_param("iidiis", $productId, $productAmount, $productPrice, $invoiceId, $storeId, $_SESSION["username"]);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $registrationSuccessful = true;
+
+        $statement->close();
+    }
+
+    $connection->close();
+    return $registrationSuccessful;
+}
+
 function registerNewProduct($productName, $productBrand, $eanCode): bool
 {
     $registrationSuccessful = false;
@@ -40,7 +76,7 @@ function getProductDetails($eanCode)
 {
     $connection = connectToDB();
 
-    if ($statement = $connection->prepare("SELECT NomeProdotto, Produttore, EAN_Prodotto FROM cnProdotto WHERE EAN_Prodotto = ?"))
+    if ($statement = $connection->prepare("SELECT ID_Prodotto, NomeProdotto, Produttore, EAN_Prodotto FROM cnProdotto WHERE EAN_Prodotto = ?"))
     {
         $statement->bind_param("s", $eanCode);
         $statement->execute();
