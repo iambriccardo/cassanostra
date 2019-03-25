@@ -87,3 +87,49 @@ WHERE MONTH(DataOra) = ${currentMonth}");
 
     return null;
 }
+
+function getProductsNumberByBrand(): array {
+    $connection = connectToDB();
+    $dataPoints = array();
+
+    $result = $connection->query("SELECT COUNT(*) AS NumProdotti, Produttore FROM `cnProdotto` GROUP BY Produttore ORDER BY NumProdotti DESC LIMIT 10");
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            array_push($dataPoints, array("label" => $row['Produttore'], "y" => $row['NumProdotti']));
+        }
+    }
+
+    return $dataPoints;
+}
+
+function getIncomingsHistory(): array {
+    $connection = connectToDB();
+    $dataPoints = array();
+
+    $result = $connection->query("SELECT (PrezzoVendita * Quantita) AS Entrata, DataOra FROM cnVendita ORDER BY DataOra ASC");
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            array_push($dataPoints, array("label" => date("d/m/Y", strtotime($row['DataOra'])), "y" => $row['Entrata']));
+        }
+    }
+
+    return $dataPoints;
+}
+
+function getExpensesHistory(): array {
+    $connection = connectToDB();
+    $dataPoints = array();
+
+    $result = $connection->query("SELECT (PrezzoAcquisto * Quantita) AS Uscita, DataOra FROM cnAcquisto ORDER BY DataOra ASC");
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            array_push($dataPoints, array("label" => date("d/m/Y", strtotime($row['DataOra'])), "y" => $row['Uscita']));
+        }
+    }
+
+    return $dataPoints;
+}
+

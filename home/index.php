@@ -28,6 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection"/>
 
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
     <!-- Misc Materialize CSS overrides to enforce theming -->
     <style>
         .card-panel.centered {
