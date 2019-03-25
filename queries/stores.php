@@ -29,3 +29,22 @@ function getStoresList()
     else
         return $result->fetch_all(MYSQLI_ASSOC);
 }
+
+function getCashiersForStore($storeId)
+{
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("SELECT ID_Cassa, NumeroCassa FROM cnCassa WHERE FK_PuntoVendita = ?"))
+    {
+        $statement->bind_param("i", $storeId);
+        $statement->execute();
+
+        $result = $statement->get_result();
+        $statement->close();
+    }
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
+}
