@@ -1,28 +1,6 @@
 <?php
 require_once 'main.php';
 
-function getClientRecentActivities(string $username)
-{
-    $connection = connectToDB();
-
-    if ($statement = $connection->prepare("SELECT * 
-FROM cnFattura AS F, cnVendita AS V, cnProdotto AS P
-WHERE F.FK_Utente = ? AND F.ID_Fattura = V.FK_Fattura AND V.FK_Prodotto = P.ID_Prodotto
-ORDER BY F.DataFattura, V.DataOra DESC")) {
-        $statement->bind_param("s", $username);
-        $statement->execute();
-
-        $result = $statement->get_result();
-
-        $statement->close();
-        $connection->close();
-
-        return $result;
-    }
-
-    return null;
-}
-
 function getBestSellingProduct(): string {
     $connection = connectToDB();
 
