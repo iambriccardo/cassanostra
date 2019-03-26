@@ -3,7 +3,6 @@ require_once __DIR__ . "/../../access/accessUtils.php";
 require_once __DIR__ . "/../../queries/products.php";
 require_once __DIR__ . "/../../queries/stores.php";
 require_once __DIR__ . "/../../utils/tableUtils.php";
-require_once __DIR__ . "/../../lib/htmlpurifier/HTMLPurifier.standalone.php";
 dieIfInvalidSessionOrRole("MAG");
 
 $listData = [];

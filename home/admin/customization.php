@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
 dieIfInvalidSessionOrRole("ADM");
-require_once __DIR__ . "/../../lib/htmlpurifier/HTMLPurifier.standalone.php";
 
 $uploadFailureReason = null;
 function handleSubmit()

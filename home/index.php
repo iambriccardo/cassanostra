@@ -2,6 +2,7 @@
 require_once '../access/accessUtils.php';
 require_once '../utils/pageUtils.php';
 require_once '../queries/users.php';
+require_once '../lib/htmlpurifier/HTMLPurifier.standalone.php';
 
 checkAccessAndRedirectIfNeeded();
 

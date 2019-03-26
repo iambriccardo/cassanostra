@@ -17,6 +17,42 @@ function getProductEANsList()
     }
 }
 
+function registerCashierInvoice()
+{
+    $connection = connectToDB();
+    if ($connection->multi_query("CREATE TEMPORARY TABLE IF NOT EXISTS t2 AS (SELECT * FROM cnFattura);
+                                  INSERT INTO cnFattura (NumeroFattura, DataFattura, FK_Utente, ScontrinoCassa) VALUES
+                                   ((SELECT MAX(NumeroFattura)+1 FROM t2 WHERE ScontrinoCassa = 1), CURDATE(), NULL, 1)"))
+    {
+        $connection->next_result();
+        // Ritorna l'ID della riga appena inserita oppure 0 se l'inserimento è fallito
+        $insertId = $connection->insert_id;
+        $connection->close();
+        return $insertId;
+    }
+
+    return null;
+}
+
+function setCashierInvoiceUser($invoiceId, $clientUsername): bool
+{
+    $updateSuccessful = false;
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("UPDATE cnFattura SET FK_Utente = ? WHERE ID_Fattura = ?"))
+    {
+        $statement->bind_param("si", $clientUsername, $invoiceId);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $updateSuccessful = true;
+
+        $statement->close();
+    }
+
+    $connection->close();
+    return $updateSuccessful;
+}
+
 function registerPurchaseInvoice($invoiceNumber, $invoiceDate, $supplierUser)
 {
     $connection = connectToDB();
@@ -32,6 +68,42 @@ function registerPurchaseInvoice($invoiceNumber, $invoiceDate, $supplierUser)
     $insertId = $connection->insert_id;
     $connection->close();
     return $insertId;
+}
+
+function registerSale($productId, $productAmount, $productPrice, $invoiceId, $cashierId)
+{
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("INSERT INTO cnVendita (FK_Prodotto, Quantita, PrezzoVendita, FK_Fattura, FK_Cassa, FK_UtenteCassiere) VALUES (?, ?, ?, ?, ?, ?)"))
+    {
+        $statement->bind_param("iidiis", $productId, $productAmount, $productPrice, $invoiceId, $cashierId, $_SESSION["username"]);
+        $statement->execute();
+        $statement->close();
+    }
+
+    // Ritorna l'ID della riga appena inserita oppure 0 se l'inserimento è fallito
+    $insertId = $connection->insert_id;
+    $connection->close();
+    return $insertId;
+}
+
+function cancelSale($saleId): bool
+{
+    $cancellationSuccessful = false;
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("UPDATE cnVendita SET Stornato=1 WHERE ID_Vendita = ?"))
+    {
+        $statement->bind_param("i", $saleId);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $cancellationSuccessful = true;
+
+        $statement->close();
+    }
+
+    $connection->close();
+    return $cancellationSuccessful;
 }
 
 function registerPurchase($productId, $productAmount, $productPrice, $invoiceId, $storeId)
@@ -76,7 +148,7 @@ function getProductDetails($eanCode)
 {
     $connection = connectToDB();
 
-    if ($statement = $connection->prepare("SELECT ID_Prodotto, NomeProdotto, Produttore, EAN_Prodotto FROM cnProdotto WHERE EAN_Prodotto = ?"))
+    if ($statement = $connection->prepare("SELECT ID_Prodotto, NomeProdotto, Produttore, EAN_Prodotto, PrezzoVenditaAttuale FROM cnProdotto WHERE EAN_Prodotto = ?"))
     {
         $statement->bind_param("s", $eanCode);
         $statement->execute();

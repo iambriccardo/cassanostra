@@ -1,6 +1,6 @@
 <?php
 require_once '../queries/users.php';
-require_once __DIR__ . "/../lib/htmlpurifier/HTMLPurifier.standalone.php";
+require_once "../lib/htmlpurifier/HTMLPurifier.standalone.php";
 
 function showLoader()
 {
