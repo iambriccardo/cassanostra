@@ -15,10 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
         $productName = $purifier->purify($_POST["name"]);
         $productBrand = $purifier->purify($_POST["brand"]);
         $eanCode = $purifier->purify($_POST["barcode"]);
+        $sellPrice = floatval(str_replace(',', '.', $_POST["sellPrice"]));
 
         if (!empty($productName) && !empty($productBrand) && !empty($eanCode))
         {
-            if (registerNewProduct($productName, $productBrand, $eanCode))
+            if (registerNewProduct($productName, $productBrand, $eanCode, $sellPrice))
                 $successOrErrorMessage = "Registrazione del prodotto riuscita.";
             else
                 $successOrErrorMessage = "Registrazione del prodotto fallita.";
@@ -235,17 +236,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
         <div class="modal-content">
             <h3>Registra un nuovo prodotto</h3>
             <div class="row">
-                <div class="input-field col s12 m4">
+                <div class="input-field col s12 m6">
                     <input id="name" name="name" type="text" required>
                     <label for="name">Nome prodotto</label>
                 </div>
-                <div class="input-field col s12 m4">
+                <div class="input-field col s12 m6">
                     <input id="brand" name="brand" type="text" required>
                     <label for="brand">Produttore</label>
                 </div>
-                <div class="input-field col s12 m4">
+                <div class="input-field col s12 m6">
                     <input id="barcode" name="barcode" type="text" minlength="13" maxlength="13" required>
                     <label for="barcode">Codice EAN</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input id="sellPrice" name="sellPrice" type="text" required>
+                    <label for="sellPrice">Prezzo di vendita (€)</label>
                 </div>
             </div>
         </div>

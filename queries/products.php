@@ -125,14 +125,14 @@ function registerPurchase($productId, $productAmount, $productPrice, $invoiceId,
     return $registrationSuccessful;
 }
 
-function registerNewProduct($productName, $productBrand, $eanCode): bool
+function registerNewProduct($productName, $productBrand, $eanCode, $sellPrice): bool
 {
     $registrationSuccessful = false;
     $connection = connectToDB();
 
-    if ($statement = $connection->prepare("INSERT INTO cnProdotto (NomeProdotto, Produttore, EAN_Prodotto) VALUES (?, ?, ?)"))
+    if ($statement = $connection->prepare("INSERT INTO cnProdotto (NomeProdotto, Produttore, EAN_Prodotto, PrezzoVenditaAttuale) VALUES (?, ?, ?, ?)"))
     {
-        $statement->bind_param("sss", $productName, $productBrand, $eanCode);
+        $statement->bind_param("sssd", $productName, $productBrand, $eanCode, $sellPrice);
         $statement->execute();
         if ($statement->errno === 0)
             $registrationSuccessful = true;

@@ -188,12 +188,12 @@ if ($GLOBALS["errorMessage"] != null)
                 <div class="input-field inline" style="vertical-align: unset">
                     <select id="store" name="store" required onchange="this.form.submit()">
                         <?php
-                        if ($selectedStoreId == null)
+                        if ($GLOBALS["selectedStoreId"] == null)
                             echo "<option disabled selected>Seleziona</option>";
 
                         foreach (getStoresList() as $store)
                         {
-                            $selectedString = $selectedStoreId == $store['Codice'] ? "selected" : "";
+                            $selectedString = $GLOBALS["selectedStoreId"] == $store['Codice'] ? "selected" : "";
                             echo "<option value=\"{$store['Codice']}\" $selectedString>{$store['Nome']}</option>";
                         }
                         ?>
@@ -204,12 +204,12 @@ if ($GLOBALS["errorMessage"] != null)
             <div class="col s12 m6">
                 Numero cassa:
                 <div class="input-field inline" style="vertical-align: unset">
-                    <select id="cashier" name="cashier" <?= ($selectedStoreId == null ? "disabled" : "") ?> required>
+                    <select id="cashier" name="cashier" <?= ($GLOBALS["selectedStoreId"] == null ? "disabled" : "") ?> required>
                         <option disabled selected>Seleziona</option>
                         <?php
-                        if ($selectedStoreId !== null)
+                        if ($GLOBALS["selectedStoreId"] !== null)
                         {
-                            foreach ($cashiersForSelectedStore as $cashier)
+                            foreach ($GLOBALS["cashiersForSelectedStore"] as $cashier)
                                 echo "<option value=\"{$cashier['ID_Cassa']}\">{$cashier['NumeroCassa']}</option>";
                         }
                         ?>
