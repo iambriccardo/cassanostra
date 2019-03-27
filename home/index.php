@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
 
         .card-panel-title {
             font-size: 32px;
-            font-weight: 300
+            font-weight: 400
         }
 
         form {

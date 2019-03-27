@@ -23,7 +23,7 @@ checkAccessAndRedirectIfNeeded();
     <style>
         .card-panel-title {
             font-size: 32px;
-            font-weight: 300
+            font-weight: 400
         }
 
         form {
