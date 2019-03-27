@@ -5,6 +5,14 @@ require_once __DIR__ . "/../../queries/stats.php";
 dieIfInvalidSessionOrRole("DIR");
 ?>
 
+<style>
+    .card-panel {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
 <div class="row">
     <div class="col s12 m3">
         <div class="card-panel blue">
@@ -30,16 +38,12 @@ dieIfInvalidSessionOrRole("DIR");
             <h4 class="white-text"><?php echo getMonthlyExpenses() . "€"; ?></h4>
         </div>
     </div>
-    <div class="col s12 m12">
+    <div class="col s12 m6">
+        <div class="card-panel"> <div id="pieProductsChart" style="height: 370px; width: 100%;"></div> </div>
+        <?php generatePieGraph("Top 5 prodotti", "Il grafico mostra i 5 prodotti più venduti", "pieProductsChart", getMostSellingProducts()) ?>
+    </div>
+    <div class="col s12 m6">
         <div class="card-panel"> <div id="pieBrandsChart" style="height: 370px; width: 100%;"></div> </div>
-        <?php generatePieGraph("Top 10 produttori", "Il grafico mostra i 10 produttori con il maggior numero di prodotti", "pieBrandsChart", getProductsNumberByBrand()) ?>
-    </div>
-    <div class="col s12 m12">
-        <div class="card-panel"> <div id="splineIncomingsChart" style="height: 370px; width: 100%;"></div> </div>
-        <?php generateSplineGraph("Andamento entrate", "Entrate in euro", "splineIncomingsChart", getIncomingsHistory()) ?>
-    </div>
-    <div class="col s12 m12">
-        <div class="card-panel"> <div id="splineExpensesChart" style="height: 370px; width: 100%;"></div> </div>
-        <?php generateSplineGraph("Andamento uscite", "Uscite in euro", "splineExpensesChart", getExpensesHistory()) ?>
+        <?php generatePieGraph("Top 5 marchi", "Il grafico mostra le 5 marche più vendute", "pieBrandsChart", getMostSellingBrands()) ?>
     </div>
 </div>

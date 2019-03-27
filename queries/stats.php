@@ -88,15 +88,40 @@ WHERE MONTH(DataOra) = ${currentMonth}");
     return null;
 }
 
-function getProductsNumberByBrand(): array {
+function getMostSellingBrands(): array {
     $connection = connectToDB();
     $dataPoints = array();
 
-    $result = $connection->query("SELECT COUNT(*) AS NumProdotti, Produttore FROM `cnProdotto` GROUP BY Produttore ORDER BY NumProdotti DESC LIMIT 10");
+    $result = $connection->query("SELECT COUNT(*) AS ProdottiVenduti, P.Produttore 
+FROM cnVendita AS V, cnProdotto AS P 
+WHERE V.FK_Prodotto = P.ID_Prodotto 
+GROUP BY P.Produttore 
+ORDER BY ProdottiVenduti DESC 
+LIMIT 5");
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            array_push($dataPoints, array("label" => $row['Produttore'], "y" => $row['NumProdotti']));
+            array_push($dataPoints, array("label" => $row['Produttore'], "y" => $row['ProdottiVenduti']));
+        }
+    }
+
+    return $dataPoints;
+}
+
+function getMostSellingProducts(): array {
+    $connection = connectToDB();
+    $dataPoints = array();
+
+    $result = $connection->query("SELECT SUM(V.Quantita) AS QuantitaVendute, P.NomeProdotto 
+FROM cnVendita AS V, cnProdotto AS P 
+WHERE V.FK_Prodotto = P.ID_Prodotto 
+GROUP BY P.ID_Prodotto 
+ORDER BY QuantitaVendute DESC 
+LIMIT 5");
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            array_push($dataPoints, array("label" => $row['NomeProdotto'], "y" => $row['QuantitaVendute']));
         }
     }
 
@@ -107,7 +132,10 @@ function getIncomingsHistory(): array {
     $connection = connectToDB();
     $dataPoints = array();
 
-    $result = $connection->query("SELECT (PrezzoVendita * Quantita) AS Entrata, DataOra FROM cnVendita ORDER BY DataOra ASC");
+    $result = $connection->query("SELECT SUM((PrezzoVendita * Quantita)) AS Entrata, DataOra 
+FROM cnVendita 
+GROUP BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) 
+ORDER BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) ASC");
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -122,7 +150,10 @@ function getExpensesHistory(): array {
     $connection = connectToDB();
     $dataPoints = array();
 
-    $result = $connection->query("SELECT (PrezzoAcquisto * Quantita) AS Uscita, DataOra FROM cnAcquisto ORDER BY DataOra ASC");
+    $result = $connection->query("SELECT SUM((PrezzoAcquisto * Quantita)) AS Uscita, DataOra 
+FROM cnAcquisto 
+GROUP BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) 
+ORDER BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) ASC");
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
