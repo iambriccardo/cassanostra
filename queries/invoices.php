@@ -18,7 +18,7 @@ function registerCashierInvoice()
     return null;
 }
 
-function setCashierInvoiceUser($invoiceId, $clientUsername): bool
+function setCashierInvoiceUser(int $invoiceId, string $clientUsername): bool
 {
     $updateSuccessful = false;
     $connection = connectToDB();
@@ -37,7 +37,7 @@ function setCashierInvoiceUser($invoiceId, $clientUsername): bool
     return $updateSuccessful;
 }
 
-function registerPurchaseInvoice($invoiceNumber, $invoiceDate, $supplierUser)
+function registerPurchaseInvoice(int $invoiceNumber, string $invoiceDate, string $supplierUser)
 {
     $connection = connectToDB();
 

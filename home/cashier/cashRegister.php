@@ -26,7 +26,7 @@ function handleSubmit()
             {
                 $selectedCashier = intval($_POST["cashier"]);
                 if (!empty($selectedCashier))
-                    $_SESSION['currentOpenCashier'] = $selectedCashier;
+                    $_SESSION['currentCashRegister'] = $selectedCashier;
             }
         }
         else if ($_POST["action"] === "invoice")
@@ -34,7 +34,7 @@ function handleSubmit()
             if ($_POST["submitType"] === "registerEntry")
             {
                 // La prima volta che viene passato un prodotto, crea una nuova fattura nel DB per poter salvare le vendite
-                if (empty($_SESSION["currentInvoiceId"]))
+                if (empty($_SESSION['cashier']["currentInvoiceId"]))
                 {
                     $invoiceId = registerCashierInvoice();
                     if ($invoiceId == null)
@@ -42,7 +42,7 @@ function handleSubmit()
                         $errorMessage = "Impossibile registrare la fattura.";
                         return;
                     }
-                    $_SESSION["currentInvoiceId"] = $invoiceId;
+                    $_SESSION['cashier']["currentInvoiceId"] = $invoiceId;
                 }
 
                 $productInfo = getProductDetails($purifier->purify($_POST["productEan"]));
@@ -59,7 +59,7 @@ function handleSubmit()
                     return;
                 }
 
-                $saleId = registerSale($productInfo["ID_Prodotto"], $productInfo['amount'], $productInfo["PrezzoVenditaAttuale"], $_SESSION["currentInvoiceId"], $_SESSION['currentOpenCashier']);
+                $saleId = registerSale($productInfo["ID_Prodotto"], $productInfo['amount'], $productInfo["PrezzoVenditaAttuale"], $_SESSION['cashier']["currentInvoiceId"], $_SESSION['currentCashRegister']);
                 if ($saleId == null)
                 {
                     $errorMessage = "Errore durante la registrazione della vendita.";
@@ -67,10 +67,22 @@ function handleSubmit()
                 }
 
                 $productInfo["entryId"] = $saleId;
-                if (!isset($_SESSION["invoiceEntries"]))
-                    $_SESSION["invoiceEntries"] = [];
+                if (!isset($_SESSION['cashier']["invoiceEntries"]))
+                    $_SESSION['cashier']["invoiceEntries"] = [];
 
-                $_SESSION["invoiceEntries"][] = $productInfo;
+                $_SESSION['cashier']["invoiceEntries"][] = $productInfo;
+            }
+            else if ($_POST["submitType"] === "scanCard")
+            {
+                // TODO ottenere info del cliente dalla fidelity card e aggiornare la fattura sul DB
+            }
+            else if ($_POST["submitType"] === "closeInvoice")
+            {
+                $_SESSION['cashier']['invoiceClosed'] = true;
+            }
+            else if ($_POST["submitType"] === "nextClient")
+            {
+                unset($_SESSION['cashier']);
             }
             else if (!empty($_POST['cancelEntry']))
             {
@@ -80,11 +92,11 @@ function handleSubmit()
                     $errorMessage = "Errore durante lo storno della vendita.";
                 else
                 {
-                    for ($i = 0; $i < count($_SESSION["invoiceEntries"]); $i++)
+                    for ($i = 0; $i < count($_SESSION['cashier']["invoiceEntries"]); $i++)
                     {
-                        if ($_SESSION["invoiceEntries"][$i]["entryId"] === $cancelledSaleId)
+                        if ($_SESSION['cashier']["invoiceEntries"][$i]["entryId"] === $cancelledSaleId)
                         {
-                            unset($_SESSION["invoiceEntries"][$i]);
+                            unset($_SESSION['cashier']["invoiceEntries"][$i]);
                             break;
                         }
                     }
@@ -99,13 +111,26 @@ if ($GLOBALS["errorMessage"] != null)
     echo "<script>document.addEventListener('DOMContentLoaded', () => M.toast({html: '{$GLOBALS['errorMessage']}'}))</script>";
 ?>
 
-<?php if (!empty($_SESSION['currentOpenCashier'])) : ?>
+<?php if (!empty($_SESSION['currentCashRegister'])) : ?>
 
 <style>
     .expand-vertically {
         height: calc(100vh - 135px);
         min-height: 400px;
         overflow: auto;
+    }
+
+    .calc-style .btn {
+        width: 100%;
+        height: 64px;
+        line-height: 64px;
+        margin: 8px;
+        text-align: left;
+        border-radius: 8px;
+    }
+
+    .col .row.calc-style {
+        margin-right: 0;
     }
 
     .row {
@@ -117,8 +142,8 @@ if ($GLOBALS["errorMessage"] != null)
     <form method="post">
         <div class="col s12 m6">
             <div class="card-panel expand-vertically">
-                <span class="card-panel-title">Scontrino <?= ($_SESSION["currentInvoiceId"] ? "#{$_SESSION["currentInvoiceId"]}" : "") ?></span>
-                <p><b>Cliente: </b> <?= $_SESSION["currentClient"] ? "{$_SESSION["currentClient"]["name"]} {$_SESSION["currentClient"]["surname"]}" : "anonimo" ?></p>
+                <span class="card-panel-title">Scontrino <?= ($_SESSION['cashier']["currentInvoiceId"] ? "#{$_SESSION['cashier']["currentInvoiceId"]}" : "") ?></span>
+                <p><b>Cliente: </b> <?= $_SESSION['cashier']["currentClient"] ? "{$_SESSION['cashier']["currentClient"]["name"]} {$_SESSION['cashier']["currentClient"]["surname"]}" : "anonimo" ?></p>
 
                 <ul class="collection">
                     <li class="collection-item">
@@ -129,7 +154,7 @@ if ($GLOBALS["errorMessage"] != null)
                         </div>
                     </li>
                     <?php
-                    foreach ($_SESSION["invoiceEntries"] as $productInfo)
+                    foreach ($_SESSION['cashier']["invoiceEntries"] as $productInfo)
                     {
                         echo "<li class=\"collection-item\">
                             <div class='row valign-wrapper'>
@@ -144,16 +169,108 @@ if ($GLOBALS["errorMessage"] != null)
                             </div> 
                           </li>";
                     }
+
+                    // Mostra il totale se lo scontrino è chiuso
+                    if ($_SESSION['cashier']['invoiceClosed'])
+                    {
+                        $totalPrice = 0;
+                        foreach ($_SESSION['cashier']["invoiceEntries"] as $productInfo)
+                            $totalPrice += $productInfo['amount'] * $productInfo["PrezzoVenditaAttuale"];
+
+                        echo "<li class='collection-item'>
+                            <div class='row valign-wrapper'>
+                              <div class='col s6'><b>Totale</b></div>
+                              <div class='col offset-s2 s4'><b>€$totalPrice</b></div>
+                            </div>
+                          </li>";
+                    }
                     ?>
                 </ul>
             </div>
         </div>
+
         <div class="col s12 m6">
             <div class="card-panel expand-vertically">
-                <input type="text" id="productEan" name="productEan" minlength="13" maxlength="13" autocomplete="off">
-                <input type="number" id="productAmount" name="productAmount" value="1">
-                <label for="productAmount">Quantità</label>
-                <button class='btn waves-effect waves-light' type="submit" name="submitType" value="registerEntry">Aggiungi</button>
+                <div class="row" style="height: 50%">
+                    <div class="row">
+                        <div id="productInput" class="input-field col s7">
+                            <input type="text" id="productEan" name="productEan" minlength="13" maxlength="13" autocomplete="off" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                            <label for="productEan">Codice prodotto</label>
+                        </div>
+                        <div id="cardInput" class="input-field col s7 hidden">
+                            <input type="number" id="cardCode" name="cardCode" autocomplete="off" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                            <label for="cardCode">Codice tessera</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input type="number" id="productAmount" name="productAmount" value="1" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                            <label for="productAmount">Quantità</label>
+                        </div>
+                        <div class="input-field col s2 right-align">
+                            <button id="scanBtn" class='btn waves-effect waves-light' type="submit" name="submitType" value="registerEntry" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                                Aggiungi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row calc-style">
+                    <div class="row">
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('7')">7</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('8')">8</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('9')">9</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="swapTextInputs()">
+                                <i id="cardBtnIcon" class="material-icons" style="font-size: 1.6rem">credit_card</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('4')">4</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('5')">5</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('6')">6</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="backSpaceInsideFieldContent()">C</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('1')">1</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('2')">2</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('3')">3</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="clearFieldContent()">AC</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('0')">0</a>
+                        </div>
+                        <div class="col s3">
+                            <a class="btn white grey-text text-darken-4" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?> onclick="appendStringIntoField('00')">00</a>
+                        </div>
+                        <div class="col s6">
+                            <button type="submit" name="submitType" value="<?= ($_SESSION['cashier']['invoiceClosed'] ? "nextClient" : "closeInvoice") ?>" class="btn waves waves-light">
+                                <?= ($_SESSION['cashier']['invoiceClosed'] ? "Prossimo cliente" : "Chiudi scontrino") ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -162,20 +279,91 @@ if ($GLOBALS["errorMessage"] != null)
     </form>
 </div>
 
-<!-- Inizializza dati per l'autocomplete del codice prodotto - non funziona qui -->
-<!--<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        M.Autocomplete.init(document.getElementById('productEan'), {
-            data: {
-                <?php
-                //foreach (getProductEANsList() as $eanCode)
-                    //echo "\"$eanCode\": null,\n";
-                ?>
-            },
-            limit: 5
-        });
-    });
-</script>-->
+<script>
+    function swapTextInputs()
+    {
+        var cardInput = document.getElementById('cardInput');
+        var productInput = document.getElementById('productInput');
+        var cardBtnIcon = document.getElementById('cardBtnIcon');
+
+        var productAmountField = document.getElementById('productAmount');
+        var scanButton = document.getElementById('scanBtn');
+
+        if (cardInput.classList.contains('hidden'))
+        {
+            productInput.classList.add('hidden');
+            cardInput.classList.remove('hidden');
+            cardBtnIcon.innerText = 'shopping_cart';
+            productAmountField.disabled = true;
+            scanButton.value = 'scanCard';
+        }
+        else
+        {
+            cardInput.classList.add('hidden');
+            productInput.classList.remove('hidden');
+            cardBtnIcon.innerText = 'credit_card';
+            productAmountField.disabled = false;
+            scanButton.value = 'registerEntry';
+        }
+    }
+
+    function appendStringIntoField(string)
+    {
+        var cardInputContainer = document.getElementById('cardInput');
+        var productInputContainer = document.getElementById('productInput');
+        var cardCodeInput = document.getElementById('cardCode');
+        var productEanInput = document.getElementById('productEan');
+
+        if (!cardInputContainer.classList.contains('hidden'))
+        {
+            cardCodeInput.focus();
+            cardCodeInput.value += string;
+        }
+        else if (!productInputContainer.classList.contains('hidden'))
+        {
+            productEanInput.focus();
+            productEanInput.value += string;
+        }
+    }
+
+    function clearFieldContent()
+    {
+        var cardInputContainer = document.getElementById('cardInput');
+        var productInputContainer = document.getElementById('productInput');
+        var cardCodeInput = document.getElementById('cardCode');
+        var productEanInput = document.getElementById('productEan');
+
+        if (!cardInputContainer.classList.contains('hidden'))
+        {
+            cardCodeInput.focus();
+            cardCodeInput.value = '';
+        }
+        else if (!productInputContainer.classList.contains('hidden'))
+        {
+            productEanInput.focus();
+            productEanInput.value = '';
+        }
+    }
+
+    function backSpaceInsideFieldContent()
+    {
+        var cardInputContainer = document.getElementById('cardInput');
+        var productInputContainer = document.getElementById('productInput');
+        var cardCodeInput = document.getElementById('cardCode');
+        var productEanInput = document.getElementById('productEan');
+
+        if (!cardInputContainer.classList.contains('hidden'))
+        {
+            cardCodeInput.focus();
+            cardCodeInput.value = cardCodeInput.value.substring(0, cardCodeInput.value.length-2);
+        }
+        else if (!productInputContainer.classList.contains('hidden'))
+        {
+            productEanInput.focus();
+            productEanInput.value = productEanInput.value.substring(0, productEanInput.value.length-2);
+        }
+    }
+</script>
 
 <?php else: ?>
 

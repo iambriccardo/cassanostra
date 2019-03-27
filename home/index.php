@@ -25,9 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
 
     <title><?= getRoleName($_SESSION["role"]) . ' - ' . getMarketName() ?></title>
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="../lib/materialize/css/materialize.min.css" media="screen,projection"/>
+
+    <script type="text/javascript" src="../lib/jquery/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="../lib/canvasjs.min.js"></script>
 
     <!-- Misc Materialize CSS overrides to enforce theming -->
@@ -105,7 +107,6 @@ printNavbar($_SESSION["role"], $_SESSION["firstName"], $_SESSION["lastName"], $_
 printPageContent($_SESSION["role"]);
 ?>
 
-<script type="text/javascript" src="../lib/jquery/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../lib/materialize/js/materialize.min.js"></script>
 <script>
     $(document).ready(function () {

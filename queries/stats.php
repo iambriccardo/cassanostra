@@ -166,7 +166,7 @@ ORDER BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) ASC");
 
 function getCashiersStats($bestStats) {
     $connection = connectToDB();
-    $result = $connection->query("SELECT T1.FK_UtenteCassiere AS `Nome cassiere`, T1.NumVendite AS `Prodotti venduti`, CONCAT(TRUNCATE((T2.NumStorni / T1.NumVendite) * 100, 2), '%') AS `Percentuale storni`
+    $result = $connection->query("SELECT CONCAT(Nome, ' ', Cognome) AS `Nome cassiere`, T1.NumVendite AS `Prodotti venduti`, CONCAT(TRUNCATE((T2.NumStorni / T1.NumVendite) * 100, 2), '%') AS `Percentuale storni`
 FROM (
 SELECT FK_UtenteCassiere, COUNT(*) NumVendite
 FROM cnVendita
@@ -178,8 +178,8 @@ GROUP BY FK_UtenteCassiere) AS T2,
 (SELECT FK_UtenteCassiere, COUNT(*) NumNonStorni
 FROM cnVendita
 WHERE Stornato = 0
-GROUP BY FK_UtenteCassiere) AS T3
-WHERE T1.FK_UtenteCassiere = T2.FK_UtenteCassiere AND T2.FK_UtenteCassiere = T3.FK_UtenteCassiere
+GROUP BY FK_UtenteCassiere) AS T3, cnUtente
+WHERE T1.FK_UtenteCassiere = T2.FK_UtenteCassiere AND T2.FK_UtenteCassiere = T3.FK_UtenteCassiere AND T1.FK_UtenteCassiere = Username
 ORDER BY " . ($bestStats ? "T1.NumVendite" : "`Percentuale storni`") . " DESC");
 
     if ($result == false)

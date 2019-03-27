@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
 require_once __DIR__ . "/../../queries/products.php";
+require_once __DIR__ . "/../../queries/invoices.php";
 require_once __DIR__ . "/../../queries/stores.php";
 require_once __DIR__ . "/../../queries/users.php";
 dieIfInvalidSessionOrRole("MAG");
@@ -30,10 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
     // Operazioni relative alla fattura
     else if ($_POST["action"] === "invoice")
     {
-        $_SESSION["warehouseInvoice"]["number"] = $purifier->purify($_POST["invoiceNr"]);
+        $_SESSION["warehouseInvoice"]["number"] = intval($_POST["invoiceNr"]);
         $_SESSION["warehouseInvoice"]["date"] = $purifier->purify($_POST["invoiceDate"]);
         $_SESSION["warehouseInvoice"]["supplierUser"] = $purifier->purify($_POST["supplierUser"]);
-        $_SESSION["warehouseInvoice"]["store"] = $purifier->purify($_POST["store"]);
+        $_SESSION["warehouseInvoice"]["store"] = intval($_POST["store"]);
 
         // Aggiunta prodotto alla lista
         if ($_POST["submitType"] === "addProduct")
@@ -139,7 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1")
             <h5>Dati fattura</h5>
             <div class="row">
                 <div class="input-field col s12 m4">
-                    <input type="text" id="invoiceNr" maxlength="10" name="invoiceNr" value="<?= $_SESSION["warehouseInvoice"]["number"] ?>" required>
+                    <input type="number" id="invoiceNr" maxlength="10" name="invoiceNr" value="<?= $_SESSION["warehouseInvoice"]["number"] ?>" required>
                     <label for="invoiceNr">Numero fattura</label>
                 </div>
                 <div class="input-field col s12 m4">
