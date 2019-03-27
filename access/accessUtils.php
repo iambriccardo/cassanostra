@@ -29,8 +29,8 @@ function checkAccessAndRedirectIfNeeded($fallbackPage = "login.php")
         }
     }
     else
-    {
-        if ($_SERVER["REQUEST_URI"] !== BASE_URL . $fallbackPage) {
+    {   $fallbackPageWithGetParams = BASE_URL . $fallbackPage . (!empty($_SERVER["QUERY_STRING"]) ? "?{$_SERVER["QUERY_STRING"]}" : "");
+        if ($_SERVER["REQUEST_URI"] !== $fallbackPageWithGetParams) {
             header("Location: " . BASE_URL . $fallbackPage);
             exit();
         }

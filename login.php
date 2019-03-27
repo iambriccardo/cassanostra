@@ -74,6 +74,13 @@ checkAccessAndRedirectIfNeeded();
                                 <label for="password">Password</label>
                                 <p>Non hai un account? <a href="register.php">Registrati.</a></p>
                             </div>
+                            <div class="col s12">
+                                <?php
+                                if (isset($_GET['error'])) {
+                                    echo "<p class='red-text'>" . $_GET['error'] . "</p>";
+                                }
+                                ?>
+                            </div>
                         </div>
                         <div class="right-align">
                             <button class="btn waves-effect waves-light" type="submit"

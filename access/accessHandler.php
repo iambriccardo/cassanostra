@@ -31,7 +31,7 @@ function handleLogin()
         if (!empty($username) && !empty($password))
             attemptLogin($username, $password);
 
-        checkAccessAndRedirectIfNeeded();
+        checkAccessAndRedirectIfNeeded('login.php?error=Credenziali di accesso errate');
     }
 }
 
@@ -49,7 +49,7 @@ function handleClientRegistration()
         if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password))
             attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role);
 
-        checkAccessAndRedirectIfNeeded("register.php");
+        checkAccessAndRedirectIfNeeded('register.php?error=Errore durante la registrazione');
     }
 }
 
