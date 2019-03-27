@@ -88,9 +88,8 @@ checkAccessAndRedirectIfNeeded("register.php");
                             </div>
                             <div class="col s12">
                                 <?php
-                                if (isset($_GET['error'])) {
-                                    echo "<p class='red-text'>" . $_GET['error'] . "</p>";
-                                }
+                                if (isset($_GET['error']))
+                                    echo "<p class='red-text'>Errore durante la registrazione</p>";
                                 ?>
                             </div>
                         </div>

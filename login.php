@@ -76,9 +76,8 @@ checkAccessAndRedirectIfNeeded();
                             </div>
                             <div class="col s12">
                                 <?php
-                                if (isset($_GET['error'])) {
-                                    echo "<p class='red-text'>" . $_GET['error'] . "</p>";
-                                }
+                                if (isset($_GET['error']))
+                                    echo "<p class='red-text'>Credenziali di accesso errate</p>";
                                 ?>
                             </div>
                         </div>
