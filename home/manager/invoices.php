@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../access/accessUtils.php";
 require_once __DIR__ . "/../../utils/tableUtils.php";
-require_once __DIR__ . "/../../queries/stats.php";
+require_once __DIR__ . "/../../queries/invoices.php";
 dieIfInvalidSessionOrRole("DIR");
 ?>
 

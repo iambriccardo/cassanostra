@@ -17,59 +17,6 @@ function getProductEANsList()
     }
 }
 
-function registerCashierInvoice()
-{
-    $connection = connectToDB();
-    if ($connection->multi_query("CREATE TEMPORARY TABLE IF NOT EXISTS t2 AS (SELECT * FROM cnFattura);
-                                  INSERT INTO cnFattura (NumeroFattura, DataFattura, FK_Utente, ScontrinoCassa) VALUES
-                                   ((SELECT MAX(NumeroFattura)+1 FROM t2 WHERE ScontrinoCassa = 1), CURDATE(), NULL, 1)"))
-    {
-        $connection->next_result();
-        // Ritorna l'ID della riga appena inserita oppure 0 se l'inserimento è fallito
-        $insertId = $connection->insert_id;
-        $connection->close();
-        return $insertId;
-    }
-
-    return null;
-}
-
-function setCashierInvoiceUser($invoiceId, $clientUsername): bool
-{
-    $updateSuccessful = false;
-    $connection = connectToDB();
-
-    if ($statement = $connection->prepare("UPDATE cnFattura SET FK_Utente = ? WHERE ID_Fattura = ?"))
-    {
-        $statement->bind_param("si", $clientUsername, $invoiceId);
-        $statement->execute();
-        if ($statement->errno === 0)
-            $updateSuccessful = true;
-
-        $statement->close();
-    }
-
-    $connection->close();
-    return $updateSuccessful;
-}
-
-function registerPurchaseInvoice($invoiceNumber, $invoiceDate, $supplierUser)
-{
-    $connection = connectToDB();
-
-    if ($statement = $connection->prepare("INSERT INTO cnFattura (NumeroFattura, DataFattura, FK_Utente, ScontrinoCassa) VALUES (?, ?, ?, 0)"))
-    {
-        $statement->bind_param("iss", $invoiceNumber, $invoiceDate, $supplierUser);
-        $statement->execute();
-        $statement->close();
-    }
-
-    // Ritorna l'ID della riga appena inserita oppure 0 se l'inserimento è fallito
-    $insertId = $connection->insert_id;
-    $connection->close();
-    return $insertId;
-}
-
 function registerSale($productId, $productAmount, $productPrice, $invoiceId, $cashierId)
 {
     $connection = connectToDB();
