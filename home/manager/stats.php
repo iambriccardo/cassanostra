@@ -6,36 +6,36 @@ dieIfInvalidSessionOrRole("DIR");
 ?>
 
 <style>
-    .card-panel {
-        white-space: nowrap;
+    .custom-card {
         overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis;
     }
 </style>
 
 <div class="row">
     <div class="col s12 m3">
-        <div class="card-panel blue">
+        <div class="card-panel custom-card blue">
             <h6 class="white-text">Prodotto più acquistato</h6>
             <h4 class="white-text"><?php echo getBestSellingProduct(); ?></h4>
         </div>
     </div>
     <div class="col s12 m3">
-        <div class="card-panel amber">
+        <div class="card-panel custom-card amber">
             <h6 class="white-text">Marca più acquistata</h6>
             <h4 class="white-text"><?php echo getBestSellingBrand(); ?></h4>
         </div>
     </div>
     <div class="col s12 m3">
-        <div class="card-panel green">
+        <div class="card-panel custom-card green">
             <h6 class="white-text">Entrate mensili</h6>
-            <h4 class="white-text"><?php echo getMonthlyIncome() . "€"; ?></h4>
+            <h4 class="white-text"><?php echo getMonthlyIncome(); ?></h4>
         </div>
     </div>
     <div class="col s12 m3">
-        <div class="card-panel pink">
+        <div class="card-panel custom-card pink">
             <h6 class="white-text">Uscite mensili</h6>
-            <h4 class="white-text"><?php echo getMonthlyExpenses() . "€"; ?></h4>
+            <h4 class="white-text"><?php echo getMonthlyExpenses(); ?></h4>
         </div>
     </div>
     <div class="col s12 m6">

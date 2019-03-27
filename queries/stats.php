@@ -50,7 +50,7 @@ function getMonthlyIncome(): string {
     $connection = connectToDB();
     $currentMonth = date('m');
 
-    $result = $connection->query("SELECT SUM(Quantita * PrezzoVendita) AS Entrate
+    $result = $connection->query("SELECT CONCAT(TRUNCATE(SUM(Quantita * PrezzoVendita), 2), '€') AS Entrate
 FROM cnVendita
 WHERE MONTH(DataOra) = ${currentMonth}");
 
@@ -71,7 +71,7 @@ function getMonthlyExpenses(): string {
     $connection = connectToDB();
     $currentMonth = date('m');
 
-    $result = $connection->query("SELECT SUM(Quantita * PrezzoAcquisto) AS Uscite
+    $result = $connection->query("SELECT CONCAT(TRUNCATE(SUM(Quantita * PrezzoAcquisto), 2), '€') AS Uscite
 FROM cnAcquisto
 WHERE MONTH(DataOra) = ${currentMonth}");
 
@@ -181,6 +181,34 @@ WHERE Stornato = 0
 GROUP BY FK_UtenteCassiere) AS T3
 WHERE T1.FK_UtenteCassiere = T2.FK_UtenteCassiere AND T2.FK_UtenteCassiere = T3.FK_UtenteCassiere
 ORDER BY " . ($bestStats ? "T1.NumVendite" : "`Percentuale storni`") . " DESC");
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function getIncomingsInvoices(): array {
+    $connection = connectToDB();
+    $result = $connection->query("SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT(TRUNCATE(SUM(Quantita * PrezzoAcquisto), 2), '€') AS Totale
+FROM cnFattura AS F, cnAcquisto AS A
+WHERE F.ID_Fattura = A.FK_Fattura 
+GROUP BY F.ID_Fattura
+ORDER BY DataFattura DESC");
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+function getExpensesInvoices(): array {
+    $connection = connectToDB();
+    $result = $connection->query("SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT(TRUNCATE(SUM(Quantita * PrezzoVendita), 2), '€') AS Totale
+FROM cnFattura AS F, cnVendita AS V
+WHERE F.ID_Fattura = V.FK_Fattura 
+GROUP BY F.ID_Fattura
+ORDER BY DataFattura DESC");
 
     if ($result == false)
         return null;

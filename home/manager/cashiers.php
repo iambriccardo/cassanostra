@@ -6,13 +6,13 @@ dieIfInvalidSessionOrRole("DIR");
 ?>
 
 <div class="row">
-    <div class="col s12 m12">
+    <div class="col s12 m6">
         <div class="card-panel">
             <span class="card-panel-title">Classifica cassieri migliori</span>
             <? printHtmlTableFromAssocArray(getCashiersStats(true)) ?>
         </div>
     </div>
-    <div class="col s12 m12">
+    <div class="col s12 m6">
         <div class="card-panel">
             <span class="card-panel-title">Classifica cassieri peggiori</span>
             <? printHtmlTableFromAssocArray(getCashiersStats(false)) ?>

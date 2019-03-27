@@ -13,7 +13,8 @@ $tabs = [
     "DIR" => [
         new NavbarTab("Statistiche", "stats.php"),
         new NavbarTab("Cassieri", "cashiers.php"),
-        new NavbarTab("Bilancio generale", "report.php")
+        new NavbarTab("Bilancio generale", "report.php"),
+        new NavbarTab("Fatture", "invoices.php")
     ],
     "CAS" => [
         new NavbarTab("Registratore di cassa", "cashRegister.php"),
