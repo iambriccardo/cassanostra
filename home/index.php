@@ -114,6 +114,7 @@ printPageContent($_SESSION["role"]);
         $(".tabs").tabs();
         $(".modal").modal();
         $('select').formSelect();
+        $('.fixed-action-btn').floatingActionButton();
 
         var dropdowns = document.querySelectorAll('.dropdown-trigger');
         M.Dropdown.init(dropdowns, { coverTrigger: false });
