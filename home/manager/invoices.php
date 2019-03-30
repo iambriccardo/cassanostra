@@ -8,14 +8,8 @@ dieIfInvalidSessionOrRole("DIR");
 <div class="row">
     <div class="col s12 m12">
         <div class="card-panel">
-            <span class="card-panel-title">Lista fatture entrate</span>
-            <? printHtmlTableFromAssocArray(getIncomingsInvoices()) ?>
-        </div>
-    </div>
-    <div class="col s12 m12">
-        <div class="card-panel">
-            <span class="card-panel-title">Lista fatture uscite</span>
-            <? printHtmlTableFromAssocArray(getExpensesInvoices()) ?>
+            <span class="card-panel-title">Lista fatture</span>
+            <? printHtmlTableFromAssocArray(getAllInvoices()) ?>
         </div>
     </div>
 </div>
