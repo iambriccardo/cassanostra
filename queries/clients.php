@@ -40,6 +40,25 @@ function getFidelityCardData(string $username): array
     return array();
 }
 
+function getClientDataFromFidelityCardNumber(int $cardNumber)
+{
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("SELECT Username, Nome, Cognome FROM cnCartaFedelta, cnUtente WHERE Username = FK_Utente AND ID_Carta = ?"))
+    {
+        $statement->bind_param("i", $cardNumber);
+        $statement->execute();
+
+        $result = $statement->get_result();
+        $statement->close();
+    }
+
+    if ($result == false || $result->num_rows === 0)
+        return null;
+    else
+        return $result->fetch_assoc();
+}
+
 function getClientRecentActivities(string $username)
 {
     $connection = connectToDB();

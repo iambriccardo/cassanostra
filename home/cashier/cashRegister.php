@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../../access/accessUtils.php";
 require_once __DIR__ . "/../../queries/stores.php";
 require_once __DIR__ . "/../../queries/products.php";
+require_once __DIR__ . "/../../queries/clients.php";
 require_once __DIR__ . "/../../queries/invoices.php";
 dieIfInvalidSessionOrRole("CAS");
 
@@ -31,20 +32,20 @@ function handleSubmit()
         }
         else if ($_POST["action"] === "invoice")
         {
+            // La prima volta che viene passato un prodotto o letta una carta, crea una nuova fattura nel DB per poter salvare le vendite
+            if (empty($_SESSION['cashier']["currentInvoiceId"]))
+            {
+                $invoiceId = registerCashierInvoice();
+                if ($invoiceId == null)
+                {
+                    $errorMessage = "Impossibile registrare la fattura.";
+                    return;
+                }
+                $_SESSION['cashier']["currentInvoiceId"] = $invoiceId;
+            }
+
             if ($_POST["submitType"] === "registerEntry")
             {
-                // La prima volta che viene passato un prodotto, crea una nuova fattura nel DB per poter salvare le vendite
-                if (empty($_SESSION['cashier']["currentInvoiceId"]))
-                {
-                    $invoiceId = registerCashierInvoice();
-                    if ($invoiceId == null)
-                    {
-                        $errorMessage = "Impossibile registrare la fattura.";
-                        return;
-                    }
-                    $_SESSION['cashier']["currentInvoiceId"] = $invoiceId;
-                }
-
                 $productInfo = getProductDetails($purifier->purify($_POST["productEan"]));
                 if ($productInfo == null)
                 {
@@ -74,7 +75,22 @@ function handleSubmit()
             }
             else if ($_POST["submitType"] === "scanCard")
             {
-                // TODO ottenere info del cliente dalla fidelity card e aggiornare la fattura sul DB
+                $cardCode = intval($_POST["cardCode"]);
+                $clientData = getClientDataFromFidelityCardNumber($cardCode);
+                if ($clientData == null)
+                {
+                    $errorMessage = "Numero carta non valido.";
+                    return;
+                }
+
+                $updateSuccessful = setCashierInvoiceUser($_SESSION['cashier']["currentInvoiceId"], $clientData["Username"]);
+                if (!$updateSuccessful)
+                {
+                    $errorMessage = "Impossibile aggiornare i dati relativi allo scontrino. Riprova.";
+                    return;
+                }
+
+                $_SESSION['cashier']['currentClient'] = $clientData;
             }
             else if ($_POST["submitType"] === "closeInvoice")
             {
@@ -120,12 +136,19 @@ if ($GLOBALS["errorMessage"] != null)
         overflow: auto;
     }
 
+    .flex-col-reverse {
+        display: flex;
+        flex-direction: column-reverse;
+        row-gap: 32px;
+    }
+
     .calc-style .btn {
         width: 100%;
-        height: 64px;
-        line-height: 64px;
+        height: 80px;
+        line-height: 80px;
         margin: 8px;
         text-align: left;
+        font-size: 16px;
         border-radius: 8px;
     }
 
@@ -143,7 +166,7 @@ if ($GLOBALS["errorMessage"] != null)
         <div class="col s12 m6">
             <div class="card-panel expand-vertically">
                 <span class="card-panel-title">Scontrino <?= ($_SESSION['cashier']["currentInvoiceId"] ? "#{$_SESSION['cashier']["currentInvoiceId"]}" : "") ?></span>
-                <p><b>Cliente: </b> <?= $_SESSION['cashier']["currentClient"] ? "{$_SESSION['cashier']["currentClient"]["name"]} {$_SESSION['cashier']["currentClient"]["surname"]}" : "anonimo" ?></p>
+                <p><b>Cliente: </b> <?= $_SESSION['cashier']["currentClient"] ? "{$_SESSION['cashier']["currentClient"]["Nome"]} {$_SESSION['cashier']["currentClient"]["Cognome"]}" : "anonimo" ?></p>
 
                 <ul class="collection">
                     <li class="collection-item">
@@ -190,28 +213,7 @@ if ($GLOBALS["errorMessage"] != null)
         </div>
 
         <div class="col s12 m6">
-            <div class="card-panel expand-vertically">
-                <div class="row" style="height: 50%">
-                    <div class="row">
-                        <div id="productInput" class="input-field col s7">
-                            <input type="text" id="productEan" name="productEan" minlength="13" maxlength="13" autocomplete="off" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
-                            <label for="productEan">Codice prodotto</label>
-                        </div>
-                        <div id="cardInput" class="input-field col s7 hidden">
-                            <input type="number" id="cardCode" name="cardCode" autocomplete="off" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
-                            <label for="cardCode">Codice tessera</label>
-                        </div>
-                        <div class="input-field col s3">
-                            <input type="number" id="productAmount" name="productAmount" value="1" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
-                            <label for="productAmount">Quantità</label>
-                        </div>
-                        <div class="input-field col s2 right-align">
-                            <button id="scanBtn" class='btn waves-effect waves-light' type="submit" name="submitType" value="registerEntry" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
-                                Aggiungi
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div class="card-panel expand-vertically flex-col-reverse">
                 <div class="row calc-style">
                     <div class="row">
                         <div class="col s3">
@@ -269,6 +271,25 @@ if ($GLOBALS["errorMessage"] != null)
                                 <?= ($_SESSION['cashier']['invoiceClosed'] ? "Prossimo cliente" : "Chiudi scontrino") ?>
                             </button>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="productInput" class="input-field col s7">
+                        <input type="text" id="productEan" name="productEan" minlength="13" maxlength="13" autocomplete="off" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                        <label for="productEan">Codice prodotto</label>
+                    </div>
+                    <div id="cardInput" class="input-field col s7 hidden">
+                        <input type="number" id="cardCode" name="cardCode" autocomplete="off" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                        <label for="cardCode">Codice tessera</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input type="number" id="productAmount" name="productAmount" value="1" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                        <label for="productAmount">Quantità</label>
+                    </div>
+                    <div class="input-field col s2 right-align">
+                        <button id="scanBtn" class='btn waves-effect waves-light' type="submit" name="submitType" value="registerEntry" <?= ($_SESSION['cashier']['invoiceClosed'] ? "disabled" : "") ?>>
+                            Aggiungi
+                        </button>
                     </div>
                 </div>
             </div>
