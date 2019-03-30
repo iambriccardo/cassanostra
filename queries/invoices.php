@@ -82,17 +82,22 @@ ORDER BY DataFattura DESC");
         return $result->fetch_all(MYSQLI_ASSOC);
 }
 
-function getAllInvoices() {
+function getAllInvoices($fromDate = "", $toDate = "") {
     $invoices = array();
     $connection = connectToDB();
+    $dateFilterClause = "";
+
+    if (!empty($fromDate) && !empty($toDate))
+        $dateFilterClause = "AND DataFattura >= '${fromDate}' AND DataFattura <= '${toDate}'";
+
     $result = $connection->query("SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT('+', TRUNCATE(SUM(Quantita * PrezzoVendita), 2), ' €') AS Totale
 FROM cnFattura AS F, cnVendita AS V
-WHERE F.ID_Fattura = V.FK_Fattura 
+WHERE F.ID_Fattura = V.FK_Fattura ${dateFilterClause}
 GROUP BY F.ID_Fattura
 UNION
 SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT('-', TRUNCATE(SUM(Quantita * PrezzoAcquisto), 2), ' €') AS Totale
 FROM cnFattura AS F, cnAcquisto AS A
-WHERE F.ID_Fattura = A.FK_Fattura 
+WHERE F.ID_Fattura = A.FK_Fattura ${dateFilterClause}
 GROUP BY F.ID_Fattura
 ORDER BY `Data fattura`");
 
