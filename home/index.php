@@ -98,6 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
         .hidden {
             display: none;
         }
+
+        /* Migliora la visibilità dei dropdown */
+        .modal {
+            overflow-y: visible;
+            max-height: 100%;
+        }
     </style>
 </head>
 
