@@ -91,11 +91,30 @@ function registerNewProduct($productName, $productBrand, $eanCode, $sellPrice): 
     return $registrationSuccessful;
 }
 
-function getProductDetails($eanCode)
+function updateProductPrice(string $eanCode, float $newPrice)
+{
+    $updateSuccessful = false;
+    $connection = connectToDB();
+
+    if ($statement = $connection->prepare("UPDATE cnProdotto SET PrezzoVenditaAttuale = ? WHERE EAN_Prodotto = ?"))
+    {
+        $statement->bind_param("ds", $newPrice, $eanCode);
+        $statement->execute();
+        if ($statement->errno === 0)
+            $updateSuccessful = true;
+
+        $statement->close();
+    }
+
+    $connection->close();
+    return $updateSuccessful;
+}
+
+function getProductDetails(string $eanCode)
 {
     $connection = connectToDB();
 
-    if ($statement = $connection->prepare("SELECT ID_Prodotto, NomeProdotto, Produttore, EAN_Prodotto, PrezzoVenditaAttuale FROM cnProdotto WHERE EAN_Prodotto = ?"))
+    if ($statement = $connection->prepare("SELECT ID_Prodotto, NomeProdotto, Produttore, EAN_Prodotto, CONCAT('€', PrezzoVenditaAttuale) FROM cnProdotto WHERE EAN_Prodotto = ?"))
     {
         $statement->bind_param("s", $eanCode);
         $statement->execute();
@@ -108,6 +127,19 @@ function getProductDetails($eanCode)
         return null;
     else
         return $result->fetch_assoc();
+}
+
+function getProductsList()
+{
+    $connection = connectToDB();
+    $result = $connection->query("SELECT NomeProdotto AS `Nome prodotto`, Produttore, EAN_Prodotto AS Barcode, PrezzoVenditaAttuale AS `Prezzo di vendita unitario`
+                                FROM cnProdotto
+                                ORDER BY NomeProdotto ASC");
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
 }
 
 function getProductInventory($storeId, $nameOrEanFilter = null)

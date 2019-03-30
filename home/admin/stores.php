@@ -131,7 +131,7 @@ if ($message !== null)
         <i class="large material-icons">add</i>
     </a>
     <ul>
-        <li><a class="btn-floating white" onclick="openAddCashRegistersModal()"><i class="material-icons grey-text text-darken-4">attach_money</i></a></li>
+        <li><a class="btn-floating white" onclick="openAddCashRegistersModal()"><i class="material-icons grey-text text-darken-4">local_atm</i></a></li>
         <li><a class="btn-floating white" onclick="openAddStoreModal()"><i class="material-icons grey-text text-darken-4">store</i></a></li>
     </ul>
 </div>

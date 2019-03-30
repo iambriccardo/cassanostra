@@ -8,7 +8,8 @@ $tabs = [
     "ADM" => [
         new NavbarTab("Personalizzazione", "customization.php"),
         new NavbarTab("Gestione utenti", "users.php"),
-        new NavbarTab("Gestione punti vendita", "stores.php")
+        new NavbarTab("Gestione punti vendita", "stores.php"),
+        new NavbarTab("Gestione prodotti", "products.php")
     ],
     "DIR" => [
         new NavbarTab("Statistiche", "stats.php"),

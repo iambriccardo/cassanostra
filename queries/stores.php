@@ -44,7 +44,8 @@ function getStoresList()
 {
     $connection = connectToDB();
     $result = $connection->query("SELECT ID_PuntoVendita AS Codice, NomePunto AS Nome, COALESCE(casseNegozi.numCasse, 0) AS `Numero casse`
-                                  FROM cnPuntoVendita LEFT JOIN (SELECT FK_PuntoVendita, COUNT(*) AS numCasse FROM cnCassa GROUP BY FK_PuntoVendita) AS casseNegozi ON FK_PuntoVendita = ID_PuntoVendita");
+                                  FROM cnPuntoVendita LEFT JOIN (SELECT FK_PuntoVendita, COUNT(*) AS numCasse FROM cnCassa GROUP BY FK_PuntoVendita) AS casseNegozi ON FK_PuntoVendita = ID_PuntoVendita
+                                  ORDER BY ID_PuntoVendita ASC");
 
     if ($result == false)
         return null;
