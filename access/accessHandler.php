@@ -46,8 +46,12 @@ function handleClientRegistration()
         $username = $purifier->purify($_POST['username']);
         $role = "CLI";
 
-        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username) && !empty($password))
-            attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role);
+        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($username))
+        {
+            $registrationSuccessful = attemptRegistration($firstName, $lastName, $email, $username, $role, null, $_POST['password']);
+            if ($registrationSuccessful)
+                attemptLogin($username, $_POST['password']);
+        }
 
         checkAccessAndRedirectIfNeeded('register.php?error');
     }

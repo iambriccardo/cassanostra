@@ -57,17 +57,6 @@ function attemptLogin($username, $password): bool
     return $isAllowed;
 }
 
-function attemptRegistrationAndLogin($firstName, $lastName, $email, $username, $password, $role): bool
-{
-    $isAllowed = false;
-
-    $registrationSuccessful = attemptRegistration($firstName, $lastName, $email, $username, $role, $password);
-    if ($registrationSuccessful)
-        $isAllowed = attemptLogin($username, $password);
-
-    return $isAllowed;
-}
-
 function attemptRegistration($firstName, $lastName, $email, $username, $role, $company = null, $password = "cambiami"): bool
 {
     $registrationSuccessful = false;
