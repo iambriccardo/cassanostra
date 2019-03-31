@@ -47,7 +47,7 @@ dieIfInvalidSessionOrRole("CLI");
         height: inherit;
         border-radius: 15px;
         color: #fff;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
         box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.3);
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
@@ -272,9 +272,13 @@ dieIfInvalidSessionOrRole("CLI");
                 <div class="fidelity-card-number">
                     <div class="section"><?= $cardNumber ?></div>
                 </div>
-                <div class="end"><span class="end-text">Saldo punti:</span><span
-                            class="end-date"> <?= $points ?></span></div>
-                <div class="fidelity-card-holder"><?= "{$_SESSION['firstName']} {$_SESSION['lastName']}" ?></div>
+                <?=
+                $noCard ? "<div class=\"end\">Richiedi la carta in negozio</div>" :
+                "<div class=\"end\">
+                    <span class=\"end-text\">Saldo punti:</span><span class=\"end-date\"> $points </span>
+                 </div>
+                <div class=\"fidelity-card-holder\">{$_SESSION['firstName']} {$_SESSION['lastName']}</div>"
+                ?>
             </div>
             <div class="back">
                 <div class="strip-black"></div>
