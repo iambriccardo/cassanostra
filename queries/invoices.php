@@ -54,6 +54,40 @@ function registerPurchaseInvoice(int $invoiceNumber, string $invoiceDate, string
     return $insertId;
 }
 
+function getSupplierInvoices(string $supplierUser, string $fromDate = null)
+{
+    $connection = connectToDB();
+
+    if (empty($fromDate))
+    {
+        $result = $connection->query("SELECT tab1.NumeroFattura AS `Numero fattura`, tab1.DataFattura AS `Data fattura`, CONCAT('€', tab2.Totale) AS Totale
+                                      FROM (SELECT ID_Fattura, NumeroFattura, DataFattura FROM cnFattura WHERE FK_Utente = '$supplierUser') AS tab1,
+                                           (SELECT SUM(PrezzoAcquisto) as Totale, FK_Fattura FROM cnAcquisto GROUP BY FK_Fattura) AS tab2
+                                      WHERE tab1.ID_Fattura = tab2.FK_Fattura
+                                      ORDER BY tab1.DataFattura DESC");
+    }
+    else
+    {
+        if ($statement = $connection->prepare("SELECT tab1.NumeroFattura AS `Numero fattura`, tab1.DataFattura AS `Data fattura`, CONCAT('€', tab2.Totale) AS Totale
+                                           FROM (SELECT ID_Fattura, NumeroFattura, DataFattura FROM cnFattura WHERE FK_Utente = ? AND DataFattura < ?) AS tab1,
+                                                (SELECT SUM(PrezzoAcquisto) as Totale, FK_Fattura FROM cnAcquisto GROUP BY FK_Fattura) AS tab2
+                                           WHERE tab1.ID_Fattura = tab2.FK_Fattura
+                                           ORDER BY tab1.DataFattura DESC"))
+        {
+            $statement->bind_param("ss", $supplierUser, $fromDate);
+            $statement->execute();
+
+            $result = $statement->get_result();
+            $statement->close();
+        }
+    }
+
+    if ($result == false)
+        return null;
+    else
+        return $result->fetch_all(MYSQLI_ASSOC);
+}
+
 function getIncomesInvoices(): array {
     $connection = connectToDB();
     $result = $connection->query("SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT(TRUNCATE(SUM(Quantita * PrezzoAcquisto), 2), '€') AS Totale

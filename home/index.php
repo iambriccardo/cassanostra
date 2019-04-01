@@ -40,7 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
 
         .card-panel-title {
             font-size: 32px;
-            font-weight: 400
+            font-weight: 400;
+            line-height: 1.85
         }
 
         form {
@@ -128,11 +129,12 @@ printPageContent($_SESSION["role"]);
         var datepickers = document.querySelectorAll('.datepicker');
         M.Datepicker.init(datepickers, {
             autoClose: true,
-            format: 'yyyy-mm-dd'
+            format: 'yyyy-mm-dd',
+            showClearBtn: true
         });
 
-        // Stampa messaggio di errore/riuscita del cambio password
         <?php
+        // Stampa messaggio di errore/riuscita del cambio password
         if ($GLOBALS["passwordChangeFailed"] !== null) {
             $message = $GLOBALS["passwordChangeFailed"] ? "Aggiornamento della password fallito." : "Aggiornamento della password riuscito.";
             echo "M.toast({html: '$message'});";
