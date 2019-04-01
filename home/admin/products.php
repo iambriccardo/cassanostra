@@ -47,7 +47,7 @@ $productsList = getProductsList();
 ?>
 
 <div class="card-panel container centered">
-    <span class="card-panel-title">Visualizza prodotti registrati</span>
+    <span class="card-panel-title">Prodotti registrati</span>
 
     <? printHtmlTableFromAssocArray($productsList) ?>
 </div>

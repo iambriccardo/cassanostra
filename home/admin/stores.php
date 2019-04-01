@@ -59,7 +59,7 @@ if ($message !== null)
 ?>
 
 <div class="card-panel container centered">
-    <span class="card-panel-title">Visualizza punti vendita</span>
+    <span class="card-panel-title">Punti vendita</span>
 
     <? printHtmlTableFromAssocArray(getStoresList()) ?>
 </div>

@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "1" && $_POST["ac
 ?>
 
 <div class="card-panel container centered">
-    <span class="card-panel-title">Visualizza utenti</span>
+    <span class="card-panel-title">Utenti registrati</span>
     <form method="post">
         Filtra per nome:
         <div class="input-field inline" style="vertical-align: unset">

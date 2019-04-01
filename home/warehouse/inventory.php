@@ -18,7 +18,7 @@ else
 ?>
 
 <div class="card-panel container centered">
-    <span class="card-panel-title">Visualizza inventario</span>
+    <span class="card-panel-title">Inventario negozio</span>
     <form method="post">
         <div class="row">
             <div class="col s12 m4">
