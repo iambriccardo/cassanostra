@@ -59,6 +59,10 @@ function attemptLogin($username, $password): bool
 
 function attemptRegistration($firstName, $lastName, $email, $username, $role, $company = null, $password = "cambiami"): bool
 {
+    // Il nome utente deve ammettere soltanto lettere, numeri, punti, trattini e underscore
+    if (!preg_match('/^[a-zA-Z0-9\.\-\_]+$/', $username))
+        return false;
+
     $registrationSuccessful = false;
     $connection = connectToDB();
     $hashed_pwd = password_hash($password, PASSWORD_BCRYPT);
