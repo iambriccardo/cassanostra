@@ -2,53 +2,8 @@
 require_once __DIR__ . "/../../access/accessUtils.php";
 dieIfInvalidSessionOrRole("ADM");
 
-$uploadFailureReason = null;
-function handleSubmit()
-{
-    $customLogoPath = __DIR__ . "/../../res/logo.png";
-    if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["tab"] === "0") {
-        if ($_POST["action"] === "branding") {
-            global $config;
-            $purifier = new HTMLPurifier();
-            $config["marketName"] = $purifier->purify($_POST["marketName"]);
-            $config["accentColor"] = $purifier->purify($_POST["accentColor"]);
-            writeConfigOnFile();
-        }
-        else if ($_POST["action"] === "logo") {
-            global $uploadFailureReason;
-            // Controlla che l'upload non sia fallito
-            if ($_FILES["logo"]["error"] !== UPLOAD_ERR_OK) {
-                $uploadFailureReason = "Caricamento fallito!";
-                return;
-            }
-
-            // Controlla che il file non superi i 3MB
-            if ($_FILES["logo"]["size"] > 3145728) {
-                $uploadFailureReason = "File troppo grande.";
-                return;
-            }
-
-            // Controlla che sia un'immagine PNG valida
-            $imageInfo = getimagesize($_FILES["logo"]["tmp_name"]);
-            if (!$imageInfo || $imageInfo[2] !== IMAGETYPE_PNG) {
-                $uploadFailureReason = "Il file caricato non è nel formato richiesto.";
-                return;
-            }
-
-            $moveSuccessful = move_uploaded_file($_FILES['logo']['tmp_name'], $customLogoPath);
-            if (!$moveSuccessful)
-                $uploadFailureReason = "Errore nel salvataggio del file caricato.";
-        }
-        else if ($_POST["action"] === "removeLogo") {
-            if (file_exists($customLogoPath))
-                unlink($customLogoPath);
-        }
-
-        // TODO avvisare necessità reload
-    }
-}
-
-handleSubmit();
+// Il submit dei form di questa pagina viene gestito in home/index.php, in modo che le modifiche vengano
+// applicate prima che logo e titolo della pagina vengano caricati
 ?>
 
 <style>
@@ -68,6 +23,13 @@ handleSubmit();
     .form-row {
         margin-top: 24px;
     }
+
+    .logo-preview {
+        margin-top: 16px;
+        max-height: 120px;
+        max-width: 100%;
+        background-color: #<?= getAccentColor() ?>
+    }
 </style>
 
 <div class="row">
@@ -85,11 +47,12 @@ handleSubmit();
                     <label for="accentColor">Colore principale del tema</label>
                     <div id="colorBox" class="color-box"></div>
                 </div>
-                <input type="hidden" name="tab" value="0">
-                <input type="hidden" name="action" value="branding">
                 <div class="row" style="margin: 24px 0 0">
-                    <button class="btn waves-effect waves-light right" type="submit">Salva</button>
+                    <button class="btn waves-effect waves-light right" name="actionType" value="brandName" type="submit">Salva</button>
                 </div>
+
+                <input type="hidden" name="tab" value="0">
+                <input type="hidden" name="action" value="customization">
             </form>
         </div>
     </div>
@@ -104,35 +67,32 @@ handleSubmit();
                     file_exists(__DIR__ . "/../../res/logo.png") ?
                         '<br>
                          <img alt="Logo"
-                         style="margin-top: 16px; max-height: 120px; background-color: #' . getAccentColor() . '"
+                         class="logo-preview"
                          src="../res/logo.png" >' : "logo di default"
                     ?>
                 </div>
                 <div class="form-row">
                     Carica un'immagine (max 3MB, formato PNG):<br>
                     <input style="margin-top: 16px;" type="file" name="logo" accept="image/png" required>
-                    <?=
-                    $GLOBALS["uploadFailureReason"] != null
-                        ? "<div class=\"form-row\"><b>Errore:</b> {$GLOBALS["uploadFailureReason"]}</div>"
-                        : ""
-                    ?>
                 </div>
-                <input type="hidden" name="tab" value="0">
-                <input type="hidden" name="action" value="logo">
+
                 <div class="row" style="margin: 24px 0 0">
                     <?=
                     file_exists(__DIR__ . "/../../res/logo.png")
-                        ? '<button form="removeForm" class="btn waves-effect waves-light" type="submit">Ripristina logo di default</button>'
+                        ? '<button form="removeForm" class="btn waves-effect waves-light" name="actionType" value="removeLogo" type="submit">Ripristina logo di default</button>'
                         : ""
                     ?>
-                    <button class="btn waves-effect waves-light right" type="submit">Carica</button>
+                    <button class="btn waves-effect waves-light right" name="actionType" value="logo" type="submit">Carica</button>
                 </div>
+
+                <input type="hidden" name="tab" value="0">
+                <input type="hidden" name="action" value="customization">
             </form>
 
             <!-- Form nascosta usata per la rimozione del logo attuale -->
             <form id="removeForm" method="post">
                 <input type="hidden" name="tab" value="0">
-                <input type="hidden" name="action" value="removeLogo">
+                <input type="hidden" name="action" value="customization">
             </form>
         </div>
     </div>

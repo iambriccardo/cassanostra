@@ -30,6 +30,47 @@ $tabs = [
     ]
 ];
 
+function applyCustomization($parameters)
+{
+    $customLogoPath = __DIR__ . "/../res/logo.png";
+    switch ($parameters["actionType"])
+    {
+        case "brandName":
+            global $config;
+            $purifier = new HTMLPurifier();
+            $config["marketName"] = $purifier->purify($_POST["marketName"]);
+            $config["accentColor"] = $purifier->purify($_POST["accentColor"]);
+            writeConfigOnFile();
+            break;
+
+        case "logo":
+            // Controlla che l'upload non sia fallito
+            if ($_FILES["logo"]["error"] !== UPLOAD_ERR_OK)
+                return "Caricamento fallito!";
+
+            // Controlla che il file non superi i 3MB
+            if ($_FILES["logo"]["size"] > 3145728)
+                return "File troppo grande.";
+
+            // Controlla che sia un'immagine PNG valida
+            $imageInfo = getimagesize($_FILES["logo"]["tmp_name"]);
+            if (!$imageInfo || $imageInfo[2] !== IMAGETYPE_PNG)
+                return "Il file caricato non è nel formato richiesto.";
+
+            $moveSuccessful = move_uploaded_file($_FILES['logo']['tmp_name'], $customLogoPath);
+            if (!$moveSuccessful)
+                return "Errore nel salvataggio del file caricato.";
+            break;
+
+        case "removeLogo":
+            if (file_exists($customLogoPath))
+                unlink($customLogoPath);
+            break;
+    }
+
+    return "Modifiche applicate.";
+}
+
 /**
  * Stampa nella pagina il contenuto della navbar a seconda del ruolo dell'utente.
  * Se la home per quest'ultimo ha più tab, è possibile specificare quale tab viene automaticamente selezionata al caricamento della pagina.
@@ -43,7 +84,7 @@ function printNavbar($userRole, $userFirstName, $userLastName, $selectedTab)
     <nav class="nav-extended">
         <div class="nav-wrapper">
             <img alt="' . getMarketName() . '"
-                 style="max-height: 64px; width: auto; padding: 8px;"
+                 style="max-height: 64px; width: auto; padding: 12px;"
                  class="brand-logo left"
                  src="' . (file_exists(__DIR__ . "/../res/logo.png") ? '../res/logo.png' : '../res/default_logo.png') . '" />
             <a class="brand-logo center hide-on-small-and-down">' . getRoleName($userRole) . '</a>

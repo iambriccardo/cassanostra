@@ -7,11 +7,18 @@ require_once '../lib/htmlpurifier/HTMLPurifier.standalone.php';
 checkAccessAndRedirectIfNeeded();
 
 $passwordChangeFailed = null;
-if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["action"] == "changePwd") {
-    if (!empty($_POST["newPwd"]))
-        $passwordChangeFailed = !attemptPasswordUpdate($_SESSION["username"], $_POST["currentPwd"], $_POST["newPwd"]);
-    else
-        $passwordChangeFailed = true;
+$customizationOutcomeMessage = null;
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    if ($_POST["action"] === "changePwd")
+    {
+        if (!empty($_POST["newPwd"]))
+            $passwordChangeFailed = !attemptPasswordUpdate($_SESSION["username"], $_POST["currentPwd"], $_POST["newPwd"]);
+        else
+            $passwordChangeFailed = true;
+    }
+    else if ($_POST["action"] === "customization")
+        $customizationOutcomeMessage = applyCustomization($_POST);
 }
 
 ?>
@@ -139,6 +146,9 @@ printPageContent($_SESSION["role"]);
             $message = $GLOBALS["passwordChangeFailed"] ? "Aggiornamento della password fallito." : "Aggiornamento della password riuscito.";
             echo "M.toast({html: '$message'});";
         }
+
+        if ($GLOBALS["customizationOutcomeMessage"] !== null)
+            echo "M.toast({html: '{$GLOBALS["customizationOutcomeMessage"]}'});";
         ?>
     });
 </script>
