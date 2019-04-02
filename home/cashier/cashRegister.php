@@ -112,7 +112,7 @@ function handleSubmit()
                     {
                         if ($_SESSION['cashier']["invoiceEntries"][$i]["entryId"] === $cancelledSaleId)
                         {
-                            unset($_SESSION['cashier']["invoiceEntries"][$i]);
+                            array_splice($_SESSION['cashier']["invoiceEntries"], $i, 1);
                             break;
                         }
                     }
@@ -132,7 +132,7 @@ if ($GLOBALS["errorMessage"] != null)
 <style>
     .expand-vertically {
         height: calc(100vh - 135px);
-        min-height: 400px;
+        min-height: 500px;
         overflow: auto;
     }
 

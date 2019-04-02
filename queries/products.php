@@ -114,7 +114,7 @@ function getProductDetails(string $eanCode)
 {
     $connection = connectToDB();
 
-    if ($statement = $connection->prepare("SELECT ID_Prodotto, NomeProdotto, Produttore, EAN_Prodotto, CONCAT('€', PrezzoVenditaAttuale) FROM cnProdotto WHERE EAN_Prodotto = ?"))
+    if ($statement = $connection->prepare("SELECT ID_Prodotto, NomeProdotto, Produttore, EAN_Prodotto, PrezzoVenditaAttuale FROM cnProdotto WHERE EAN_Prodotto = ?"))
     {
         $statement->bind_param("s", $eanCode);
         $statement->execute();
@@ -132,7 +132,7 @@ function getProductDetails(string $eanCode)
 function getProductsList()
 {
     $connection = connectToDB();
-    $result = $connection->query("SELECT NomeProdotto AS `Nome prodotto`, Produttore, EAN_Prodotto AS Barcode, PrezzoVenditaAttuale AS `Prezzo di vendita unitario`
+    $result = $connection->query("SELECT NomeProdotto AS `Nome prodotto`, Produttore, EAN_Prodotto AS Barcode, CONCAT('€', PrezzoVenditaAttuale) AS `Prezzo di vendita unitario`
                                 FROM cnProdotto
                                 ORDER BY NomeProdotto ASC");
 
