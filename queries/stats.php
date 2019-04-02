@@ -134,8 +134,8 @@ function getIncomingsHistory(): array {
 
     $result = $connection->query("SELECT SUM((PrezzoVendita * Quantita)) AS Entrata, DataOra 
 FROM cnVendita 
-GROUP BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) 
-ORDER BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) ASC");
+GROUP BY YEAR(DataOra), MONTH(DataOra), DAY(DataOra) 
+ORDER BY YEAR(DataOra), MONTH(DataOra), DAY(DataOra) ASC");
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -152,8 +152,8 @@ function getExpensesHistory(): array {
 
     $result = $connection->query("SELECT SUM((PrezzoAcquisto * Quantita)) AS Uscita, DataOra 
 FROM cnAcquisto 
-GROUP BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) 
-ORDER BY DAY(DataOra), MONTH(DataOra), YEAR(DataOra) ASC");
+GROUP BY YEAR(DataOra), MONTH(DataOra), DAY(DataOra) 
+ORDER BY YEAR(DataOra), MONTH(DataOra), DAY(DataOra) ASC");
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
