@@ -8,17 +8,11 @@ function getBestSellingProduct(): string {
 FROM cnVendita, cnProdotto
 WHERE ID_Prodotto = FK_Prodotto
 GROUP BY ID_Prodotto
-HAVING COUNT(*) = (SELECT MAX(T.NumVendite)
-FROM (SELECT COUNT(*) AS NumVendite
-FROM cnVendita AS V
-GROUP BY V.FK_Prodotto) AS T)
+ORDER BY SUM(Quantita) DESC
 LIMIT 1");
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            return $row['NomeProdotto'];
-        }
-    }
+    if ($result->num_rows > 0)
+        return $result->fetch_row()[0];
 
     return null;
 }
@@ -29,19 +23,12 @@ function getBestSellingBrand(): string {
     $result = $connection->query("SELECT Produttore
 FROM cnVendita, cnProdotto
 WHERE ID_Prodotto = FK_Prodotto
-GROUP BY ID_Prodotto
-HAVING COUNT(*) = (SELECT MAX(T.NumVendite)
-FROM (SELECT COUNT(*) AS NumVendite
-FROM cnVendita AS V, cnProdotto AS P
-WHERE P.ID_Prodotto = V.FK_Prodotto      
-GROUP BY P.Produttore) AS T)
+GROUP BY Produttore
+ORDER BY COUNT(*) DESC
 LIMIT 1");
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            return $row['Produttore'];
-        }
-    }
+    if ($result->num_rows > 0)
+        return $result->fetch_row()[0];
 
     return null;
 }

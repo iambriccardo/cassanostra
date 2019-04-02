@@ -28,13 +28,13 @@ dieIfInvalidSessionOrRole("DIR");
     </div>
     <div class="col s12 m3">
         <div class="card-panel custom-card green">
-            <h6 class="white-text">Entrate mensili</h6>
+            <h6 class="white-text">Entrate del mese corrente</h6>
             <h4 class="white-text"><?php echo getMonthlyIncome(); ?></h4>
         </div>
     </div>
     <div class="col s12 m3">
         <div class="card-panel custom-card pink">
-            <h6 class="white-text">Uscite mensili</h6>
+            <h6 class="white-text">Uscite del mese corrente</h6>
             <h4 class="white-text"><?php echo getMonthlyExpenses(); ?></h4>
         </div>
     </div>
