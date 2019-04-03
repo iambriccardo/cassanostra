@@ -88,34 +88,6 @@ function getSupplierInvoices(string $supplierUser, string $fromDate = null)
         return $result->fetch_all(MYSQLI_ASSOC);
 }
 
-function getIncomesInvoices(): array {
-    $connection = connectToDB();
-    $result = $connection->query("SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT(TRUNCATE(SUM(Quantita * PrezzoAcquisto), 2), '€') AS Totale
-FROM cnFattura AS F, cnAcquisto AS A
-WHERE F.ID_Fattura = A.FK_Fattura 
-GROUP BY F.ID_Fattura
-ORDER BY DataFattura DESC");
-
-    if ($result == false)
-        return null;
-    else
-        return $result->fetch_all(MYSQLI_ASSOC);
-}
-
-function getExpensesInvoices(): array {
-    $connection = connectToDB();
-    $result = $connection->query("SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT(TRUNCATE(SUM(Quantita * PrezzoVendita), 2), '€') AS Totale
-FROM cnFattura AS F, cnVendita AS V
-WHERE F.ID_Fattura = V.FK_Fattura 
-GROUP BY F.ID_Fattura
-ORDER BY DataFattura DESC");
-
-    if ($result == false)
-        return null;
-    else
-        return $result->fetch_all(MYSQLI_ASSOC);
-}
-
 function getAllInvoices($fromDate = "", $toDate = "") {
     $invoices = array();
     $connection = connectToDB();
@@ -126,7 +98,7 @@ function getAllInvoices($fromDate = "", $toDate = "") {
 
     $result = $connection->query("SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT('+', TRUNCATE(SUM(Quantita * PrezzoVendita), 2), ' €') AS Totale
 FROM cnFattura AS F, cnVendita AS V
-WHERE F.ID_Fattura = V.FK_Fattura ${dateFilterClause}
+WHERE F.ID_Fattura = V.FK_Fattura ${dateFilterClause} AND Stornato = 0
 GROUP BY F.ID_Fattura
 UNION
 SELECT NumeroFattura AS `Numero fattura`, DataFattura AS `Data fattura`, CONCAT('-', TRUNCATE(SUM(Quantita * PrezzoAcquisto), 2), ' €') AS Totale

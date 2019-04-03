@@ -6,7 +6,7 @@ function getBestSellingProduct(): string {
 
     $result = $connection->query("SELECT NomeProdotto
 FROM cnVendita, cnProdotto
-WHERE ID_Prodotto = FK_Prodotto
+WHERE ID_Prodotto = FK_Prodotto AND Stornato = 0
 GROUP BY ID_Prodotto
 ORDER BY SUM(Quantita) DESC
 LIMIT 1");
@@ -22,7 +22,7 @@ function getBestSellingBrand(): string {
 
     $result = $connection->query("SELECT Produttore
 FROM cnVendita, cnProdotto
-WHERE ID_Prodotto = FK_Prodotto
+WHERE ID_Prodotto = FK_Prodotto AND Stornato = 0
 GROUP BY Produttore
 ORDER BY COUNT(*) DESC
 LIMIT 1");
@@ -39,7 +39,7 @@ function getMonthlyIncome(): string {
 
     $result = $connection->query("SELECT CONCAT(TRUNCATE(SUM(Quantita * PrezzoVendita), 2), '€') AS Entrate
 FROM cnVendita
-WHERE MONTH(DataOra) = ${currentMonth}");
+WHERE MONTH(DataOra) = ${currentMonth} AND Stornato = 0");
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -81,7 +81,7 @@ function getMostSellingBrands(): array {
 
     $result = $connection->query("SELECT COUNT(*) AS ProdottiVenduti, P.Produttore 
 FROM cnVendita AS V, cnProdotto AS P 
-WHERE V.FK_Prodotto = P.ID_Prodotto 
+WHERE V.FK_Prodotto = P.ID_Prodotto AND Stornato = 0
 GROUP BY P.Produttore 
 ORDER BY ProdottiVenduti DESC 
 LIMIT 5");
@@ -101,7 +101,7 @@ function getMostSellingProducts(): array {
 
     $result = $connection->query("SELECT SUM(V.Quantita) AS QuantitaVendute, P.NomeProdotto 
 FROM cnVendita AS V, cnProdotto AS P 
-WHERE V.FK_Prodotto = P.ID_Prodotto 
+WHERE V.FK_Prodotto = P.ID_Prodotto AND Stornato = 0
 GROUP BY P.ID_Prodotto 
 ORDER BY QuantitaVendute DESC 
 LIMIT 5");
@@ -121,6 +121,7 @@ function getIncomingsHistory(): array {
 
     $result = $connection->query("SELECT SUM((PrezzoVendita * Quantita)) AS Entrata, DataOra 
 FROM cnVendita 
+WHERE Stornato = 0
 GROUP BY YEAR(DataOra), MONTH(DataOra), DAY(DataOra) 
 ORDER BY YEAR(DataOra), MONTH(DataOra), DAY(DataOra) ASC");
 
