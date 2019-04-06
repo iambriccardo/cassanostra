@@ -154,8 +154,9 @@ function getProductInventory($storeId, $nameOrEanFilter = null)
             (
                 ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnAcquisto WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdAcquistati)
                 LEFT JOIN cnProdotto ON ProdAcquistati.FK_Prodotto = ID_Prodotto
-            ) LEFT JOIN ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnVendita, cnCassa WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdVenduti) ON ProdVenduti.FK_Prodotto = ID_Prodotto
-            GROUP BY ID_Prodotto"
+            ) LEFT JOIN ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnVendita, cnCassa WHERE Stornato = 0 AND FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdVenduti) ON ProdVenduti.FK_Prodotto = ID_Prodotto
+            GROUP BY ID_Prodotto
+            ORDER BY `Quantità disponibile` ASC"
         )) {
             $statement->bind_param("ii", $storeId, $storeId);
             $statement->execute();
@@ -171,9 +172,10 @@ function getProductInventory($storeId, $nameOrEanFilter = null)
             (
                 ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnAcquisto WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdAcquistati)
                 LEFT JOIN cnProdotto ON ProdAcquistati.FK_Prodotto = ID_Prodotto
-            ) LEFT JOIN ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnVendita, cnCassa WHERE FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdVenduti) ON ProdVenduti.FK_Prodotto = ID_Prodotto
+            ) LEFT JOIN ((SELECT FK_Prodotto, SUM(COALESCE(Quantita, 0)) AS Tot FROM cnVendita, cnCassa WHERE Stornato = 0 AND FK_PuntoVendita = ? GROUP BY FK_Prodotto) AS ProdVenduti) ON ProdVenduti.FK_Prodotto = ID_Prodotto
             WHERE NomeProdotto LIKE ? OR EAN_Prodotto LIKE ?
-            GROUP BY ID_Prodotto"
+            GROUP BY ID_Prodotto
+            ORDER BY `Quantità disponibile` ASC"
         )) {
             $wildcardFilter = "%$nameOrEanFilter%";
             $statement->bind_param("iiss", $storeId, $storeId, $wildcardFilter, $wildcardFilter);

@@ -65,7 +65,7 @@ function getClientRecentActivities(string $username)
 
     if ($statement = $connection->prepare("SELECT * 
 FROM cnFattura AS F, cnVendita AS V, cnProdotto AS P
-WHERE F.FK_Utente = ? AND F.ID_Fattura = V.FK_Fattura AND V.FK_Prodotto = P.ID_Prodotto
+WHERE F.FK_Utente = ? AND F.ID_Fattura = V.FK_Fattura AND V.FK_Prodotto = P.ID_Prodotto AND V.Stornato = 0
 ORDER BY F.DataFattura, V.DataOra DESC")) {
         $statement->bind_param("s", $username);
         $statement->execute();
