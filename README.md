@@ -8,7 +8,7 @@ Here's an overview: [presentation on Google Slides](https://docs.google.com/pres
 ### Tables
 
 #### Utente
-Stores user details and credentials.
+Stores user details and credentials. `Azienda` attribute is used only for suppliers and stores the name of the company they work for.
 ```sql
 CREATE TABLE cnUtente (
   `Username` varchar(30) NOT NULL PRIMARY KEY,
